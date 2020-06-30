@@ -902,6 +902,17 @@ namespace KerbalConstructionTime
 
         public static KCT_BuildListVessel AddVesselToBuildList(KCT_BuildListVessel blv)
         {
+            foreach (ConfigNode partNode in blv.shipNode.nodes)
+            {
+                if (partNode.name == "PART")
+                {
+                    foreach (ConfigNode partModuleNode in partNode.nodes)       // Not all of .nodes are nodes of modules, but nobody cares
+                    {
+                        partModuleNode.SetValue("isKCTBuilt", true, false);
+                    }
+                }
+            }
+
             if (CurrentGameIsCareer())
             {
                 //Check upgrades

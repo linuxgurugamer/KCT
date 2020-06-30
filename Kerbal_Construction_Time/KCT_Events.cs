@@ -31,6 +31,7 @@ namespace KerbalConstructionTime
         {
             GameEvents.onGUILaunchScreenSpawn.Add(launchScreenOpenEvent);
             GameEvents.onVesselRecovered.Add(vesselRecoverEvent);
+            //GameEvents.onAboutToSaveShip.Add(OnAboutToSaveShipEvent);
 
             //GameEvents.onLaunch.Add(vesselSituationChange);
             GameEvents.onVesselSituationChange.Add(vesselSituationChange);
@@ -484,6 +485,18 @@ namespace KerbalConstructionTime
                         KCT_GameStates.recoveredVessel.buildPoints = KCT_Utilities.GetBuildTime(KCT_GameStates.recoveredVessel.ExtractedPartNodes);
                         KCT_GameStates.recoveredVessel.integrationPoints = KCT_MathParsing.ParseIntegrationTimeFormula(KCT_GameStates.recoveredVessel);
                     }
+
+                    foreach (ConfigNode partNode in KCT_GameStates.recoveredVessel.shipNode.nodes)
+                    {
+                        if (partNode.name == "PART")
+                        {
+                            foreach (ConfigNode partModuleNode in partNode.nodes)       // Not all of .nodes are nodes of modules, but nobody cares
+                            {
+                                partModuleNode.SetValue("isKCTBuilt", true, false);
+                            }
+                        }
+                    }
+
                     if (KCT_GameStates.recoveredVessel.type == KCT_BuildListVessel.ListType.VAB)
                     {
                         KCT_GameStates.ActiveKSC.VABWarehouse.Add(KCT_GameStates.recoveredVessel);
@@ -498,6 +511,20 @@ namespace KerbalConstructionTime
                 }
             }
         }
+
+        /*public void OnAboutToSaveShipEvent(ShipConstruct sc)
+        {
+            foreach (Part p in sc.parts)
+            {
+                foreach (PartModule pm in p.Modules)
+                {
+                    if (pm.Fields["isKCTBuilt"] != null)
+                    {
+                        pm.Fields["isKCTBuilt"].SetValue(false, pm);
+                    }
+                }
+            }
+        }*/
 
 
         private float GetResourceMass(List<ProtoPartResourceSnapshot> resources)
