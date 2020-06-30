@@ -31,7 +31,6 @@ namespace KerbalConstructionTime
         {
             GameEvents.onGUILaunchScreenSpawn.Add(launchScreenOpenEvent);
             GameEvents.onVesselRecovered.Add(vesselRecoverEvent);
-            //GameEvents.onAboutToSaveShip.Add(OnAboutToSaveShipEvent);
 
             //GameEvents.onLaunch.Add(vesselSituationChange);
             GameEvents.onVesselSituationChange.Add(vesselSituationChange);
@@ -511,20 +510,6 @@ namespace KerbalConstructionTime
                 }
             }
         }
-
-        /*public void OnAboutToSaveShipEvent(ShipConstruct sc)
-        {
-            foreach (Part p in sc.parts)
-            {
-                foreach (PartModule pm in p.Modules)
-                {
-                    if (pm.Fields["isKCTBuilt"] != null)
-                    {
-                        pm.Fields["isKCTBuilt"].SetValue(false, pm);
-                    }
-                }
-            }
-        }*/
 
 
         private float GetResourceMass(List<ProtoPartResourceSnapshot> resources)
