@@ -485,7 +485,11 @@ namespace KerbalConstructionTime
                         KCT_GameStates.recoveredVessel.integrationPoints = KCT_MathParsing.ParseIntegrationTimeFormula(KCT_GameStates.recoveredVessel);
                     }
 
-                    KCT_Utilities.SetIsKCTBuiltFlags(KCT_GameStates.recoveredVessel.shipNode);
+                    if (SpaceTuxUtility.HasMod.hasMod("EngineDecay"))
+                    {
+                        KCTDebug.Log("Setting isKCTBuilt flags as P2P mod is present");
+                        KCT_Utilities.SetIsKCTBuiltFlags(KCT_GameStates.recoveredVessel.shipNode);
+                    }
 
                     if (KCT_GameStates.recoveredVessel.type == KCT_BuildListVessel.ListType.VAB)
                     {

@@ -902,7 +902,11 @@ namespace KerbalConstructionTime
 
         public static KCT_BuildListVessel AddVesselToBuildList(KCT_BuildListVessel blv)
         {
-            SetIsKCTBuiltFlags(blv.shipNode);
+            if (SpaceTuxUtility.HasMod.hasMod("EngineDecay"))
+            {
+                KCTDebug.Log("Setting isKCTBuilt flags as P2P mod is present");
+                KCT_Utilities.SetIsKCTBuiltFlags(blv.shipNode);
+            }
 
             if (CurrentGameIsCareer())
             {
