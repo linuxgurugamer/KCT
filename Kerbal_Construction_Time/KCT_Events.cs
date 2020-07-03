@@ -485,16 +485,7 @@ namespace KerbalConstructionTime
                         KCT_GameStates.recoveredVessel.integrationPoints = KCT_MathParsing.ParseIntegrationTimeFormula(KCT_GameStates.recoveredVessel);
                     }
 
-                    foreach (ConfigNode partNode in KCT_GameStates.recoveredVessel.shipNode.nodes)
-                    {
-                        if (partNode.name == "PART")
-                        {
-                            foreach (ConfigNode partModuleNode in partNode.nodes)       // Not all of .nodes are nodes of modules, but nobody cares
-                            {
-                                partModuleNode.SetValue("isKCTBuilt", true, false);
-                            }
-                        }
-                    }
+                    KCT_Utilities.SetIsKCTBuiltFlags(KCT_GameStates.recoveredVessel.shipNode);
 
                     if (KCT_GameStates.recoveredVessel.type == KCT_BuildListVessel.ListType.VAB)
                     {
