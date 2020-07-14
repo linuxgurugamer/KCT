@@ -902,6 +902,12 @@ namespace KerbalConstructionTime
 
         public static KCT_BuildListVessel AddVesselToBuildList(KCT_BuildListVessel blv)
         {
+            if (SpaceTuxUtility.HasMod.hasMod("EngineDecay"))
+            {
+                KCTDebug.Log("Setting isKCTBuilt flags as P2P mod is present");
+                KCT_Utilities.SetIsKCTBuiltFlags(blv.shipNode);
+            }
+
             if (CurrentGameIsCareer())
             {
                 //Check upgrades
@@ -1922,6 +1928,20 @@ namespace KerbalConstructionTime
                    (FlightGlobals.ActiveVessel.situation == Vessel.Situations.PRELAUNCH ||
                     string.IsNullOrEmpty(reqTech) ||
                     ResearchAndDevelopment.GetTechnologyState(reqTech) == RDTech.State.Available);
+        }
+
+        public static void SetIsKCTBuiltFlags(ConfigNode shipNode)
+        {
+            foreach (ConfigNode partNode in shipNode.nodes)
+            {
+                if (partNode.name == "PART")
+                {
+                    foreach (ConfigNode partModuleNode in partNode.nodes)       // Not all of .nodes are nodes of modules, but nobody cares
+                    {
+                        partModuleNode.SetValue("isKCTBuilt", true, false);
+                    }
+                }
+            }
         }
     }
 }
