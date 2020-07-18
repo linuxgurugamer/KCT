@@ -16,7 +16,7 @@ namespace KerbalConstructionTime
         private static KCT_Preset WorkingPreset;
         private static Vector2 presetScrollView, presetMainScroll;
         private static bool changed = false, showFormula = false;
-        private static string OMultTmp = "", BEffTmp = "", IEffTmp = "", ReEffTmp = "", MaxReTmp = "";
+        private static string OMultTmp = "", BEffTmp = "", IEffTmp = "", ReEffTmp = "", MaxReTmp = "", MTimePTmp = "";
 
         public static void DrawPresetWindow(int windowID)
         {
@@ -116,8 +116,12 @@ namespace KerbalConstructionTime
             GUILayout.Label("Time Settings", yellowText);
             GUILayout.BeginVertical(HighLogic.Skin.textArea);
             GUILayout.BeginHorizontal();
+            GUILayout.BeginVertical();
             GUILayout.Label("Overall Multiplier: ");
             double.TryParse(OMultTmp = GUILayout.TextField(OMultTmp, 10, GUILayout.Width(80)), out WorkingPreset.timeSettings.OverallMultiplier);
+            GUILayout.Label("Merging Time Percent: ");
+            double.TryParse(MTimePTmp = GUILayout.TextField(MTimePTmp, 10, GUILayout.Width(80)), out WorkingPreset.timeSettings.MergingTimePercent);
+            GUILayout.EndVertical();
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
             GUILayout.Label("Build Effect: ");
@@ -399,6 +403,7 @@ namespace KerbalConstructionTime
             }
 
             OMultTmp = WorkingPreset.timeSettings.OverallMultiplier.ToString();
+            MTimePTmp = WorkingPreset.timeSettings.MergingTimePercent.ToString();
             BEffTmp = WorkingPreset.timeSettings.BuildEffect.ToString();
             IEffTmp = WorkingPreset.timeSettings.InventoryEffect.ToString();
             ReEffTmp = WorkingPreset.timeSettings.ReconditioningEffect.ToString();
