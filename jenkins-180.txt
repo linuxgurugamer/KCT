@@ -28,16 +28,16 @@
 
 
 # 1:GAMEDIR, VERSIONFILE [, GITHUBREPO ]
-1:KerbalConstructionTime, KerbalConstructionTime.180.version, KCT
+1:KerbalConstructionTime, KerbalConstructionTime-180.version, KCT
 
 # compiler Compiler options and flags
 #2c:-d:KSP1_4
 
 # 2:PROJNAME, PROJFILE, VERSIONFILE, PLUGINSFOLDER
-2:Kerbal_Construction_Time,Kerbal_Construction_Time/KerbalConstructionTime-1.8.csproj,KerbalConstructionTime.173.version,GameData/KerbalConstructionTime/Plugins
+2:Kerbal_Construction_Time,Kerbal_Construction_Time/KerbalConstructionTime-1.8.csproj,KerbalConstructionTime-180.version,GameData/KerbalConstructionTime/Plugins
 
 # 3:SOURCEFILE, DESTDIR
-3:KerbalConstructionTime.180.version,GameData/KerbalConstructionTime
+3:KerbalConstructionTime-180.version,GameData/KerbalConstructionTime
 
 
 
