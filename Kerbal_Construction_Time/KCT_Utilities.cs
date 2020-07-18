@@ -891,6 +891,7 @@ namespace KerbalConstructionTime
             {
                 launchSite = EditorLogic.fetch.launchSiteName;
             }
+
             double effCost = GetEffectiveCost(EditorLogic.fetch.ship.Parts);
             double bp = GetBuildTime(effCost);
             KCT_BuildListVessel blv = new KCT_BuildListVessel(EditorLogic.fetch.ship, launchSite, effCost, bp, EditorLogic.FlagURL);

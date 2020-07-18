@@ -422,6 +422,7 @@ namespace KerbalConstructionTime
                 {
                     showBuildList = !showBuildList;
                 }
+
                 //if (GUILayout.Button("Part Inventory"))
                 //{
                 //    showInventory = !showInventory;
