@@ -24,6 +24,9 @@ namespace KerbalConstructionTime
         public static int TechUpgradesTotal = 0;
         public static float SciPointsTotal = -1f;
 
+        public static bool mergingAvailable;
+        public static List<KCT_BuildListVessel> mergedVessels = new List<KCT_BuildListVessel>();
+
         public class KCT_TechItemIlist<T> : List<T>
         {
             // public event Action<int> Changed = delegate { };
