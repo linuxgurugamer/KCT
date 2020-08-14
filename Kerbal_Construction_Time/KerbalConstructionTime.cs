@@ -453,7 +453,7 @@ namespace KerbalConstructionTime
         WaitForSeconds wfsOne = null, wfsTwo = null;
         private IEnumerator AirlaunchRoutine(AirlaunchParams launchParams, Guid vesselId)
         {
-            yield return wfsTwo; // new WaitForSeconds(2);
+            yield return wfsTwo;
 
             for (int i = 10; i > 0; i--)
             {
@@ -470,10 +470,32 @@ namespace KerbalConstructionTime
                 }
 
                 ScreenMessages.PostScreenMessage($"[KCT] Launching in {i}...", 1f, ScreenMessageStyle.UPPER_CENTER, XKCDColors.Red);
-                yield return wfsOne; // new WaitForSeconds(1);
+                yield return wfsOne;
             }
 
             HyperEdit_Utilities.DoAirlaunch(launchParams);
+
+            if (KCT_Utilities.IsPrincipiaInstalled)
+                StartCoroutine(ClobberPrincipia());
+        }
+
+        /// <summary>
+        /// Need to keep the vessel in Prelaunch state for a while if Principia is installed.
+        /// Otherwise the vessel will spin out in a random way.
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerator ClobberPrincipia()
+        {
+            if (FlightGlobals.ActiveVessel == null)
+                yield return null;
+
+            const int maxFramesWaited = 250;
+            int i = 0;
+            do
+            {
+                FlightGlobals.ActiveVessel.situation = Vessel.Situations.PRELAUNCH;
+                yield return new WaitForFixedUpdate();
+            } while (FlightGlobals.ActiveVessel.packed && i++ < maxFramesWaited);
         }
 
         private void EditorRecalculation()
