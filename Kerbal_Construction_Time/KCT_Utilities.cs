@@ -1189,6 +1189,19 @@ namespace KerbalConstructionTime
             }
         }
 
+        private static bool? _isPrincipiaInstalled = null;
+        public static bool IsPrincipiaInstalled
+        {
+            get
+            {
+                if (!_isPrincipiaInstalled.HasValue)
+                {
+                    _isPrincipiaInstalled = AssemblyLoader.loadedAssemblies.Any(a => string.Equals(a.name, "ksp_plugin_adapter", StringComparison.OrdinalIgnoreCase));
+                }
+                return _isPrincipiaInstalled.Value;
+            }
+        }
+
         public static string GetActiveRSSKSC()
         {
             if (!KSCSwitcherInstalled) return "Stock";

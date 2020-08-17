@@ -24,7 +24,7 @@ namespace KerbalConstructionTime
 
         private static bool unlockEditor;
 
-        private static Vector2 scrollPos;
+        private static Vector2 scrollPos, VABMergeScroll, SPHMergeScroll;
 
         private static Rect iconPosition = new Rect(Screen.width / 4, Screen.height - 30, 50, 30);//110
         private static Rect mainWindowPosition = new Rect(Screen.width / 3.5f, Screen.height / 3.5f, 350, 200);
@@ -332,7 +332,7 @@ namespace KerbalConstructionTime
                 GUI.DragWindow();
         }
 
-        public static bool showInventory = false, useInventory = false;
+        public static bool showInventory = false, useInventory = false, showMergeSelectionList = false;
         //private static string currentCategoryString = "NONE";
         //private static int currentCategoryInt = -1;
         public static string buildRateForDisplay;
@@ -451,10 +451,25 @@ namespace KerbalConstructionTime
                 double origBP = ship.isFinished ? finishedShipBP : ship.buildPoints;
                 origBP += ship.integrationPoints;
                 double buildTime = KCT_GameStates.EditorBuildTime + KCT_GameStates.EditorIntegrationTime;
-                double difference = Math.Abs(buildTime - origBP);
+                
                 double progress;
-                if (ship.isFinished) progress = origBP;
-                else progress = ship.progress;
+                if (KCT_GameStates.mergedVessels.Count() == 0)
+                {
+                    if (ship.isFinished) progress = origBP;
+                    else progress = ship.progress;
+                }
+                else
+                {
+                    double mergedCost = ship.effectiveCost;
+                    foreach (KCT_BuildListVessel v in KCT_GameStates.mergedVessels)
+                    {
+                        mergedCost += v.effectiveCost;
+                    }
+                    progress = KCT_MathParsing.ParseIntegrationTimeFormula(ship, KCT_GameStates.mergedVessels) + KCT_Utilities.GetBuildTime(mergedCost);
+                    progress *= (1 - KCT_PresetManager.Instance.ActivePreset.timeSettings.MergingTimePercent/200);          // For some reason it takes twice the desired time if we divide the percent by 100. I get 
+                    origBP = progress;
+                }
+                double difference = Math.Abs(buildTime - origBP);
                 double newProgress = Math.Max(0, progress - (1.1 * difference));
                 GUILayout.Label($"Original: {Math.Max(0, Math.Round(100 * (progress / origBP), 2))}%");
                 GUILayout.Label($"Edited: {Math.Round(100 * newProgress / buildTime, 2)}%");
@@ -489,13 +504,19 @@ namespace KerbalConstructionTime
                 GUILayout.BeginHorizontal();
                 if (GUILayout.Button("Save Edits"))
                 {
+                    double usedShipsCost = ship.GetTotalCost();
+                    foreach (KCT_BuildListVessel v in KCT_GameStates.mergedVessels)
+                    {
+                        usedShipsCost += v.GetTotalCost();
+                        v.RemoveFromBuildList();
+                    }
 
                     finishedShipBP = -1;
-                    KCT_Utilities.AddFunds(ship.GetTotalCost(), TransactionReasons.VesselRollout);
+                    KCT_Utilities.AddFunds(usedShipsCost, TransactionReasons.VesselRollout);
                     KCT_BuildListVessel newShip = KCT_Utilities.AddVesselToBuildList();
                     if (newShip == null)
                     {
-                        KCT_Utilities.SpendFunds(ship.GetTotalCost(), TransactionReasons.VesselRollout);
+                        KCT_Utilities.SpendFunds(usedShipsCost, TransactionReasons.VesselRollout);
                         return;
                     }
 
@@ -517,6 +538,8 @@ namespace KerbalConstructionTime
                     EditorLogic.fetch.Unlock("KCTEditorMouseLock");
                     KCTDebug.Log("Edits saved.");
 
+                    KCT_GameStates.mergedVessels = new List<KCT_BuildListVessel>();
+
                     HighLogic.LoadScene(GameScenes.SPACECENTER);
                 }
                 if (GUILayout.Button("Cancel Edits"))
@@ -532,6 +555,8 @@ namespace KerbalConstructionTime
                     EditorLogic.fetch.Unlock("KCTEditorMouseLock");
 
                     ScrapYardWrapper.ProcessVessel(KCT_GameStates.editedVessel.ExtractedPartNodes);
+
+                    KCT_GameStates.mergedVessels = new List<KCT_BuildListVessel>();
 
                     HighLogic.LoadScene(GameScenes.SPACECENTER);
                 }
@@ -567,6 +592,62 @@ namespace KerbalConstructionTime
                             }
                         }
                     }
+                }
+                if (!showMergeSelectionList && KCT_GameStates.mergingAvailable)
+                {
+                    if (GUILayout.Button("Merge Built Vessel"))
+                    {
+                        showMergeSelectionList = true;
+                    }
+                }
+                if (showMergeSelectionList && KCT_GameStates.mergingAvailable)
+                {
+                    if (GUILayout.Button("Hide Merge Selection"))
+                    {
+                        showMergeSelectionList = false;
+                    }
+
+                    GUILayout.BeginVertical();
+                    GUILayout.Label("Choose a vessel");
+
+                    GUILayout.Label("VAB");
+                    VABMergeScroll = GUILayout.BeginScrollView(VABMergeScroll, GUILayout.Height(5 * 26 + 5), GUILayout.MaxHeight(1 * Screen.height / 4));
+
+                    foreach (KCT_BuildListVessel vessel in KCT_GameStates.ActiveKSC.VABWarehouse)
+                    {
+                        if (vessel.id != ship.id && !KCT_GameStates.mergedVessels.Contains(vessel))
+                        {
+                            if (GUILayout.Button(vessel.shipName))
+                            {
+                                ShipConstruct mergedShip = new ShipConstruct();
+                                mergedShip.LoadShip(vessel.shipNode);
+                                EditorLogic.fetch.SpawnConstruct(mergedShip);
+
+                                KCT_GameStates.mergedVessels.Add(vessel);
+                            }
+                        }
+                    }
+                    GUILayout.EndScrollView();
+
+                    GUILayout.Label("SPH");
+                    SPHMergeScroll = GUILayout.BeginScrollView(SPHMergeScroll, GUILayout.Height(5 * 26 + 5), GUILayout.MaxHeight(1 * Screen.height / 4));
+
+                    foreach (KCT_BuildListVessel vessel in KCT_GameStates.ActiveKSC.SPHWarehouse)
+                    {
+                        if (vessel.id != ship.id && !KCT_GameStates.mergedVessels.Contains(vessel))
+                        {
+                            if (GUILayout.Button(vessel.shipName))
+                            {
+                                ShipConstruct mergedShip = new ShipConstruct();
+                                mergedShip.LoadShip(vessel.shipNode);
+                                EditorLogic.fetch.SpawnConstruct(mergedShip);
+
+                                KCT_GameStates.mergedVessels.Add(vessel);
+                            }
+                        }
+                    }
+                    GUILayout.EndScrollView();
+                    GUILayout.EndVertical();
                 }
             }
 

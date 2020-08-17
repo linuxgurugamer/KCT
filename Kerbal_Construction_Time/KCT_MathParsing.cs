@@ -123,7 +123,7 @@ namespace KerbalConstructionTime
             return GetStandardFormulaValue("IntegrationCost", variables);
         }
 
-        public static double ParseIntegrationTimeFormula(KCT_BuildListVessel vessel)
+        public static double ParseIntegrationTimeFormula(KCT_BuildListVessel vessel, List<KCT_BuildListVessel> mergedVessels = null)
         {
             if (!KCT_PresetManager.Instance.ActivePreset.generalSettings.Enabled ||
                 string.IsNullOrEmpty(KCT_PresetManager.Instance.ActivePreset.formulaSettings.IntegrationTimeFormula) ||
@@ -132,7 +132,7 @@ namespace KerbalConstructionTime
                 return 0;
             }
 
-            Dictionary<string, string> variables = GetIntegrationRolloutVariables(vessel);
+            Dictionary<string, string> variables = GetIntegrationRolloutVariables(vessel, mergedVessels);
             return GetStandardFormulaValue("IntegrationTime", variables);
         }
 
@@ -174,13 +174,24 @@ namespace KerbalConstructionTime
             return GetStandardFormulaValue("AirlaunchTime", variables);
         }
 
-        private static Dictionary<string, string> GetIntegrationRolloutVariables(KCT_BuildListVessel vessel)
+        private static Dictionary<string, string> GetIntegrationRolloutVariables(KCT_BuildListVessel vessel, List<KCT_BuildListVessel> mergedVessels = null)
         {
             double loadedMass, emptyMass, loadedCost, emptyCost;
             loadedCost = vessel.cost;
             emptyCost = vessel.emptyCost;
             loadedMass = vessel.GetTotalMass();
             emptyMass = vessel.emptyMass;
+
+            if (mergedVessels != null)
+            {
+                foreach (KCT_BuildListVessel v in mergedVessels)
+                {
+                    loadedCost += v.cost;
+                    emptyCost += v.emptyCost;
+                    loadedMass += v.GetTotalMass();
+                    emptyMass += v.emptyMass;
+                }
+            }
 
             int EditorLevel = 0, LaunchSiteLvl = 0, EditorMax = 0, LaunchSiteMax = 0;
             int isVABVessel = 0;
