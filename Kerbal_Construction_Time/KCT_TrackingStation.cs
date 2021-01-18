@@ -105,13 +105,16 @@ namespace KerbalConstructionTime
 
             DialogGUIBase[] options = new DialogGUIBase[cnt];
             cnt = 0;
-            if (sph)
+            if (!FlightGlobals.ActiveVessel.isEVA)
             {
-                options[cnt++] = new DialogGUIButton("Recover to SPH", RecoverToSPH);
-            }
-            if (vab)
-            {
-                options[cnt++] = new DialogGUIButton("Recover to VAB", RecoverToVAB);
+                if (sph)
+                {
+                    options[cnt++] = new DialogGUIButton("Recover to SPH", RecoverToSPH);
+                }
+                if (vab)
+                {
+                    options[cnt++] = new DialogGUIButton("Recover to VAB", RecoverToVAB);
+                }
             }
             options[cnt++] = new DialogGUIButton("Normal recovery", DoNormalRecovery);
             options[cnt] = new DialogGUIButton("Cancel", Cancel);

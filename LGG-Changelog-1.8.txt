@@ -1,5 +1,8 @@
 ChangeLog
 
+1.4.8.1
+	Removed option to Recover to VAB & Recover to SPH for eva'd kerbals
+
 1.4.8 
 	Thanks to @siimav for this:
 		Fix airlaunched vessels flipping out with Principia
