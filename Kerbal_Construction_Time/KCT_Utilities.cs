@@ -1956,6 +1956,28 @@ namespace KerbalConstructionTime
                 }
             }
         }
+
+        static public bool KerbalInExternalSeat(Vessel v, bool unloaded = false)
+        {
+            if (!unloaded)
+            {
+                var kerbalSeats = v.FindPartModulesImplementing<KerbalSeat>();
+                foreach (var m in kerbalSeats)
+                {
+                    if (m.Occupant != null)
+                        return true;
+                }
+            } else
+            {
+                foreach (ProtoPartSnapshot p in v.protoVessel.protoPartSnapshots)
+                {
+                    if (p.partName.StartsWith("kerbalEVA"))
+                        return true;
+                }
+            }
+            return false;
+        }
+
     }
 }
 /*

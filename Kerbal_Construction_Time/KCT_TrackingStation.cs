@@ -77,8 +77,11 @@ namespace KerbalConstructionTime
 
         public void NewRecoveryFunctionTrackingStation()
         {
+            Debug.Log("NewRecoveryFunctionTrackingStation");
             selectedVessel = null;
             SpaceTracking trackingStation = (SpaceTracking)FindObjectOfType(typeof(SpaceTracking));
+            if (trackingStation == null)
+                Debug.Log("trackingStation is null");
             selectedVessel = trackingStation.SelectedVessel;
 
             if (selectedVessel == null)
@@ -86,7 +89,6 @@ namespace KerbalConstructionTime
                 Debug.Log("[KCT] Error! No Vessel selected.");
                 return;
             }
- 
 
 
             bool sph = (selectedVessel.IsRecoverable && selectedVessel.IsClearToSave() == ClearToSaveStatus.CLEAR);
@@ -100,12 +102,18 @@ namespace KerbalConstructionTime
                     ResearchAndDevelopment.GetTechnologyState(reqTech) == RDTech.State.Available);
 
             int cnt = 2;
-            if (sph) cnt++;
-            if (vab) cnt++;
+            bool kerbInExtSeat = KCT_Utilities.KerbalInExternalSeat(selectedVessel, true);
+
+            if (!selectedVessel.isEVA && !kerbInExtSeat)
+            {
+                if (sph) cnt++;
+                if (vab) cnt++;
+            }
 
             DialogGUIBase[] options = new DialogGUIBase[cnt];
             cnt = 0;
-            if (!FlightGlobals.ActiveVessel.isEVA)
+            string msg = "Do you want KCT to do the recovery?";
+            if (!selectedVessel.isEVA && !kerbInExtSeat)
             {
                 if (sph)
                 {
@@ -115,11 +123,17 @@ namespace KerbalConstructionTime
                 {
                     options[cnt++] = new DialogGUIButton("Recover to VAB", RecoverToVAB);
                 }
+                options[cnt++] = new DialogGUIButton("Normal recovery", DoNormalRecovery);
             }
-            options[cnt++] = new DialogGUIButton("Normal recovery", DoNormalRecovery);
+            else
+            {
+                msg = "KCT cannot recover if any kerbals are in external seats";
+                options[cnt++] = new DialogGUIButton("Recover", DoNormalRecovery);
+            }
+
             options[cnt] = new DialogGUIButton("Cancel", Cancel);
 
-            MultiOptionDialog diag = new MultiOptionDialog("scrapVesselPopup", "Do you want KCT to do the recovery?", "Recover Vessel", null, options: options);
+            MultiOptionDialog diag = new MultiOptionDialog("scrapVesselPopup", msg, "Recover Vessel", null, options: options);
             PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
         }
     }
