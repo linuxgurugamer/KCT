@@ -465,9 +465,8 @@ namespace KerbalConstructionTime
                     {
                         mergedCost += v.effectiveCost;
                     }
-                    progress = KCT_MathParsing.ParseIntegrationTimeFormula(ship, KCT_GameStates.mergedVessels) + KCT_Utilities.GetBuildTime(mergedCost);
-                    progress *= (1 - KCT_PresetManager.Instance.ActivePreset.timeSettings.MergingTimePercent/200);          // For some reason it takes twice the desired time if we divide the percent by 100. I get 
-                    origBP = progress;
+                    origBP = progress = KCT_MathParsing.ParseIntegrationTimeFormula(ship, KCT_GameStates.mergedVessels) + KCT_Utilities.GetBuildTime(mergedCost);
+                    progress *= (1 - KCT_PresetManager.Instance.ActivePreset.timeSettings.MergingTimePercent/100);
                 }
                 double difference = Math.Abs(buildTime - origBP);
                 double newProgress = Math.Max(0, progress - (1.1 * difference));
