@@ -13,7 +13,7 @@ namespace KerbalConstructionTime
         private static Rect presetPosition = new Rect((Screen.width-presetsWidth) / 2, (Screen.height-presetsHeight) / 2, presetsWidth, presetsHeight);
         private static Rect presetNamingWindowPosition = new Rect((Screen.width - 250) / 2, (Screen.height - 50) / 2, 250, 50);
         private static int presetIndex = -1;
-        private static KCT_Preset WorkingPreset;
+        internal static KCT_Preset WorkingPreset;
         private static Vector2 presetScrollView, presetMainScroll;
         private static bool changed = false, showFormula = false;
         private static string OMultTmp = "", BEffTmp = "", IEffTmp = "", ReEffTmp = "", MaxReTmp = "", MTimePTmp = "";

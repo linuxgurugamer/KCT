@@ -1,7 +1,27 @@
 ChangeLog
 
+1.4.9
+	Added code to check for kerbals in external seats, and to disallow recover if occupied. Tested in both Editor and Tracking Station
+	Changed min version to be 1.10.1.  will probably work for the 1.8+, but no support
+
+1.4.8.1
+	Removed option to Recover to VAB & Recover to SPH for eva'd kerbals
+
+1.4.8 
+	Thanks to @siimav for this:
+		Fix airlaunched vessels flipping out with Principia
+	Thanks to user @DarthPointer for this:
+		Added vessel merging
+			How to use it:
+			You build some vessels or recover them (merging only operates vessels that are in storages)
+			Start editing any vessel from the storage
+			Open merging selection
+			Pick a vessel you want to merge (make sure its root is attachable, just as with stock ship merging)
+			The achieved BP progress will be FullMergedVessel * (1 - ConfigurablePercent/100), FullMergedVessel is Build Points for a craft made of merged vessels.
+	Added public methods for needed access by L-Tech mod
+
 1.4.7.14
-	PR submitted by @DarthPointer to support his mid:
+	PR submitted by @DarthPointer to support his mod:
 		Setting isKCTBuilt = true fields for all the modules KCT sees in the ship's config tree
 
 1.4.7.13

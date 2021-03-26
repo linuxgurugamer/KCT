@@ -21,8 +21,12 @@ namespace KerbalConstructionTime
         public static List<KCT_KSC> KSCs = new List<KCT_KSC>();
         public static string activeKSCName = "";
         public static bool UpdateLaunchpadDestructionState = false;
-        public static int TechUpgradesTotal = 0;
-        public static float SciPointsTotal = -1f;
+        internal static int TechUpgradesTotal = 0;
+        internal static float SciPointsTotal = -1f;
+
+        public static bool Enabled {  get { return KCT_GUI.WorkingPreset.generalSettings.Enabled; } }
+        public static float SciencePointsAllocated {  get { return SciPointsTotal; } }
+        public static int TechUpgradePointsAllocated {  get { return TechUpgradesTotal; } }
 
         public static bool mergingAvailable;
         public static List<KCT_BuildListVessel> mergedVessels = new List<KCT_BuildListVessel>();

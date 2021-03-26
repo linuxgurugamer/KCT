@@ -51,28 +51,39 @@ namespace KerbalConstructionTime
         {
             return;
         }
+
         public void RecoverVessel()
         {
             bool sph = (FlightGlobals.ActiveVessel != null && FlightGlobals.ActiveVessel.IsRecoverable && FlightGlobals.ActiveVessel.IsClearToSave() == ClearToSaveStatus.CLEAR);
             bool vab = KCT_Utilities.IsVabRecoveryAvailable();
 
             int cnt = 2;
-            if (!FlightGlobals.ActiveVessel.isEVA)
+            bool kerbInExtSeat = KCT_Utilities.KerbalInExternalSeat(FlightGlobals.ActiveVessel);
+            if (!FlightGlobals.ActiveVessel.isEVA && !kerbInExtSeat)
             {
                 if (sph) cnt++;
                 if (vab) cnt++;
             }
             DialogGUIBase[] options = new DialogGUIBase[cnt];
             cnt = 0;
+            string msg = "Do you want KCT to do the recovery?";
+
             if (!FlightGlobals.ActiveVessel.isEVA)
             {
-                if (sph)
+                if (!kerbInExtSeat)
                 {
-                    options[cnt++] = new DialogGUIButton("Recover to SPH", RecoverToSPH);
-                }
-                if (vab)
+                    if (sph)
+                    {
+                        options[cnt++] = new DialogGUIButton("Recover to SPH", RecoverToSPH);
+                    }
+                    if (vab)
+                    {
+                        options[cnt++] = new DialogGUIButton("Recover to VAB", RecoverToVAB);
+                    }
+                } 
+                else
                 {
-                    options[cnt++] = new DialogGUIButton("Recover to VAB", RecoverToVAB);
+                    msg = "KCT cannot recover if any kerbals are in external seats";
                 }
                 options[cnt++] = new DialogGUIButton("Normal recovery", DoNormalRecovery);
             } 
@@ -81,7 +92,7 @@ namespace KerbalConstructionTime
             options[cnt] = new DialogGUIButton("Cancel", Cancel);
 
             MultiOptionDialog diag = new MultiOptionDialog("scrapVesselPopup", 
-                "Do you want KCT to do the recovery?", 
+                msg, 
                 "Kerbal Construction Time (KCT)", 
                 null, options: options);
             PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
