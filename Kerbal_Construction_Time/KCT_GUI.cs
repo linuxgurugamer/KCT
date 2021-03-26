@@ -614,7 +614,7 @@ namespace KerbalConstructionTime
 
                     foreach (KCT_BuildListVessel vessel in KCT_GameStates.ActiveKSC.VABWarehouse)
                     {
-                        if (vessel.id != ship.id && !KCT_GameStates.mergedVessels.Contains(vessel))
+                        if (vessel.id != ship.id && !KCT_GameStates.mergedVessels.Exists(x => x.id == vessel.id))
                         {
                             if (GUILayout.Button(vessel.shipName))
                             {
@@ -633,7 +633,7 @@ namespace KerbalConstructionTime
 
                     foreach (KCT_BuildListVessel vessel in KCT_GameStates.ActiveKSC.SPHWarehouse)
                     {
-                        if (vessel.id != ship.id && !KCT_GameStates.mergedVessels.Contains(vessel))
+                        if (vessel.id != ship.id && !KCT_GameStates.mergedVessels.Exists(x => x.id == vessel.id))
                         {
                             if (GUILayout.Button(vessel.shipName))
                             {
