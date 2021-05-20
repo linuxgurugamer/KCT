@@ -190,7 +190,7 @@ namespace KerbalConstructionTime
                     //  GUILayout.Space((butW + 4) * 3);
                     GUILayout.Label("Name:");
                     GUILayout.EndHorizontal();
-                    scrollPos = GUILayout.BeginScrollView(scrollPos, GUILayout.Height(250));
+                    buildPlanScrollPos = GUILayout.BeginScrollView(buildPlanScrollPos, GUILayout.Height(250));
 
                     if (plansList.Count == 0)
                     {
