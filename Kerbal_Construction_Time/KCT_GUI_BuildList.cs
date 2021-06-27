@@ -184,7 +184,7 @@ namespace KerbalConstructionTime
                     KCT_GameStates.lastWarpRate = 0;
                 }
 
-                if (KCT_GameStates.settings.AutoKACAlarms && buildItem.GetTimeLeft() > 30) //don't check if less than 30 seconds to completion. Might fix errors people are seeing
+                if (KCT_GameStates.settings.AutoKACAlarms) //don't check if less than 30 seconds to completion. Might fix errors people are seeing
                 {
                     double UT = Planetarium.GetUniversalTime();
                     if (!KCT_Utilities.ApproximatelyEqual(KCT_GameStates.KACAlarmUT - UT, buildItem.GetTimeLeft()))
@@ -193,13 +193,14 @@ namespace KerbalConstructionTime
                         KCT_GameStates.KACAlarmUT = (buildItem.GetTimeLeft() + UT);
                         AlarmTypeBase alarmCheck = AlarmClockScenario.GetNextAlarm(UT);
                         AlarmTypeBase thisAlarm = alarmCheck;
-                        while (true)
+                        try
                         {
-                            try
+                            while (true)
                             {
-                                if (thisAlarm.title.Equals("Construction"))
+                                if (thisAlarm.description.Contains("KCT:"))
                                 {
-                                    return;
+                                    AlarmClockScenario.DeleteAlarm(thisAlarm);
+                                    throw new Exception();
                                 }
                                 else
                                 {
@@ -207,51 +208,53 @@ namespace KerbalConstructionTime
                                 }
                                 thisAlarm = AlarmClockScenario.GetNextAlarm(alarmCheck.ut);
                             }
-                            catch
+                        }
+                        catch
+                        {
+                            txt = "KCT: ";
+                            string finalTitle = "Construction";
+                            if (buildItem.GetListType() == KCT_BuildListVessel.ListType.Reconditioning)
                             {
-                                AlarmTypeBase alarm = alarmCheck;
-                                txt = "KCT: ";
-                                if (buildItem.GetListType() == KCT_BuildListVessel.ListType.Reconditioning)
+                                KCT_Recon_Rollout reconRoll = buildItem as KCT_Recon_Rollout;
+                                if (reconRoll.RRType == KCT_Recon_Rollout.RolloutReconType.Reconditioning)
                                 {
-                                    KCT_Recon_Rollout reconRoll = buildItem as KCT_Recon_Rollout;
-                                    if (reconRoll.RRType == KCT_Recon_Rollout.RolloutReconType.Reconditioning)
-                                    {
-                                        txt += reconRoll.launchPadID + " Reconditioning";
-                                    }
-                                    else if (reconRoll.RRType == KCT_Recon_Rollout.RolloutReconType.Rollout)
-                                    {
-                                        KCT_BuildListVessel associated = reconRoll.KSC.VABWarehouse.FirstOrDefault(blv => blv.id.ToString() == reconRoll.associatedID);
-                                        txt += associated.shipName + " rollout at " + reconRoll.launchPadID;
-                                    }
-                                    else if (reconRoll.RRType == KCT_Recon_Rollout.RolloutReconType.Rollback)
-                                    {
-                                        KCT_BuildListVessel associated = reconRoll.KSC.VABWarehouse.FirstOrDefault(blv => blv.id.ToString() == reconRoll.associatedID);
-                                        txt += associated.shipName + " rollback at " + reconRoll.launchPadID;
-                                    }
-                                    else
-                                    {
-                                        txt += buildItem.GetItemName() + " Complete";
-                                    }
+                                    txt += reconRoll.launchPadID + " Reconditioning";
+                                    finalTitle = "Reconditioning";
+                                }
+                                else if (reconRoll.RRType == KCT_Recon_Rollout.RolloutReconType.Rollout)
+                                {
+                                    KCT_BuildListVessel associated = reconRoll.KSC.VABWarehouse.FirstOrDefault(blv => blv.id.ToString() == reconRoll.associatedID);
+                                    txt += associated.shipName + " rollout at " + reconRoll.launchPadID;
+                                    finalTitle = "Rollout";
+                                }
+                                else if (reconRoll.RRType == KCT_Recon_Rollout.RolloutReconType.Rollback)
+                                {
+                                    KCT_BuildListVessel associated = reconRoll.KSC.VABWarehouse.FirstOrDefault(blv => blv.id.ToString() == reconRoll.associatedID);
+                                    txt += associated.shipName + " rollback at " + reconRoll.launchPadID;
+                                    finalTitle = "Rollback";
                                 }
                                 else
-                                    txt += buildItem.GetItemName() + " Complete";
-                                if (alarm == null)
                                 {
-                                    AlarmTypeRaw alarmToSet = new AlarmTypeRaw
-                                    {
-                                        title = "Construction",
-                                        description = txt,
-                                        actions =
+                                    txt += buildItem.GetItemName() + " Complete";
+                                }
+                            }
+                            else
+                            {
+                                txt += buildItem.GetItemName() + " Complete";
+                            }
+                            AlarmTypeRaw alarmToSet = new AlarmTypeRaw
+                            {
+                                title = finalTitle,
+                                description = txt,
+                                actions =
                             {
                                 warp = AlarmActions.WarpEnum.KillWarp,
                                 message = AlarmActions.MessageEnum.Yes
                             },
-                                        ut = KCT_GameStates.KACAlarmUT
-                                    };
-                                    AlarmClockScenario.AddAlarm(alarmToSet);
-                                    KCTDebug.Log("Alarm created with ID: " + alarm.Id);
-                                }
-                            }
+                                ut = KCT_GameStates.KACAlarmUT
+                            };
+                            AlarmClockScenario.AddAlarm(alarmToSet);
+                            KCTDebug.Log("Alarm created with ID: " + alarmToSet.Id);
                         }
                     }
                 }
@@ -410,7 +413,7 @@ namespace KerbalConstructionTime
                             GUILayout.Label(MagiCore.Utilities.GetColonFormattedTime(b.timeLeft), GUILayout.Width(width2));
                         else
                             GUILayout.Label("Est: " + MagiCore.Utilities.GetColonFormattedTime((b.buildPoints + b.integrationPoints - b.progress) / KCT_Utilities.GetBuildRate(0, KCT_BuildListVessel.ListType.VAB, null)), GUILayout.Width(width2));
-                       // GUILayout.Label(Math.Round(b.buildPoints, 2).ToString(), GUILayout.Width(width1 / 2 + 10));
+                        // GUILayout.Label(Math.Round(b.buildPoints, 2).ToString(), GUILayout.Width(width1 / 2 + 10));
                         GUILayout.EndHorizontal();
                     }
 
@@ -1030,7 +1033,7 @@ namespace KerbalConstructionTime
                     // Can move up if item above is not a parent.
                     List<string> parentList = KerbalConstructionTimeData.techNameToParents[t.techID];
                     bool canMoveUp = i > 0 && (parentList == null || !parentList.Contains(techList[i - 1].techID));
-                    
+
                     // Can move down if item below is not a child.
                     List<string> nextParentList = i < techList.Count - 1 ? KerbalConstructionTimeData.techNameToParents[techList[i + 1].techID] : null;
                     bool canMoveDown = nextParentList == null || !nextParentList.Contains(t.techID);
@@ -1302,8 +1305,8 @@ namespace KerbalConstructionTime
                     KCT_GameStates.ActiveKSC.SPHList.Insert(0, b);
                 }
             }
-            if (!b.isFinished 
-                && (KCT_PresetManager.Instance.ActivePreset.generalSettings.MaxRushClicks == 0 || b.rushBuildClicks < KCT_PresetManager.Instance.ActivePreset.generalSettings.MaxRushClicks) 
+            if (!b.isFinished
+                && (KCT_PresetManager.Instance.ActivePreset.generalSettings.MaxRushClicks == 0 || b.rushBuildClicks < KCT_PresetManager.Instance.ActivePreset.generalSettings.MaxRushClicks)
                 && GUILayout.Button("Rush Build 10%\n√" + Math.Round(b.GetRushCost())))
             {
                 b.DoRushBuild();
