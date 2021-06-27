@@ -291,8 +291,6 @@ namespace KerbalConstructionTime
                     InputLockManager.RemoveControlLock("KCTLaunchLock");
             }
 
-            KACWrapper.InitKACWrapper();
-
             if (!KCT_PresetManager.Instance.ActivePreset.generalSettings.Enabled)
             {
                 if (InputLockManager.GetControlLock("KCTKSCLock") == ControlTypes.KSC_FACILITIES)

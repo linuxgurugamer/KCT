@@ -184,22 +184,46 @@ namespace KerbalConstructionTime
                     KCT_GameStates.lastWarpRate = 0;
                 }
 
-                if (KCT_GameStates.settings.AutoKACAlarms && KACWrapper.APIReady && buildItem.GetTimeLeft() > 30) //don't check if less than 30 seconds to completion. Might fix errors people are seeing
+                if (KCT_GameStates.settings.AutoKACAlarms && buildItem.GetTimeLeft() > 30) //don't check if less than 30 seconds to completion. Might fix errors people are seeing
                 {
                     double UT = Planetarium.GetUniversalTime();
                     if (!KCT_Utilities.ApproximatelyEqual(KCT_GameStates.KACAlarmUT - UT, buildItem.GetTimeLeft()))
                     {
                         KCTDebug.Log("KAC Alarm being created!");
                         KCT_GameStates.KACAlarmUT = (buildItem.GetTimeLeft() + UT);
-                        KACWrapper.KACAPI.KACAlarm alarm = KACWrapper.KAC.Alarms.FirstOrDefault(a => a.ID == KCT_GameStates.KACAlarmId);
-                        if (alarm == null)
+                        AlarmTypeBase alarm = null;
+                        AlarmTypeBase alarmCheck = AlarmClockScenario.GetNextAlarm(UT);
+                        while (true)
                         {
-                            alarm = KACWrapper.KAC.Alarms.FirstOrDefault(a => (a.Name.StartsWith("KCT: ")));
+                            try
+                            {
+                                alarmCheck = AlarmClockScenario.GetNextAlarm(alarmCheck.ut);
+                                if (alarmCheck.title.Equals("Construction"))
+                                {
+                                    alarm = alarmCheck;
+                                    break;
+                                }
+                                if (alarmCheck == null)
+                                {
+                                    break;
+                                }
+                            }
+                            catch
+                            {
+                                break;
+                            }
                         }
-                        if (alarm != null)
+                        try
                         {
-                            KCTDebug.Log("Removing existing alarm");
-                            KACWrapper.KAC.DeleteAlarm(alarm.ID);
+                            if (alarm != null)
+                            {
+                                KCTDebug.Log("Removing existing alarm");
+                                AlarmClockScenario.DeleteAlarm(alarmCheck.Id);
+                            }
+                        }
+                        catch
+                        {
+                            //just to suppress exceptions from null comparisons.
                         }
                         txt = "KCT: ";
                         if (buildItem.GetListType() == KCT_BuildListVessel.ListType.Reconditioning)
@@ -226,8 +250,22 @@ namespace KerbalConstructionTime
                         }
                         else
                             txt += buildItem.GetItemName() + " Complete";
-                        KCT_GameStates.KACAlarmId = KACWrapper.KAC.CreateAlarm(KACWrapper.KACAPI.AlarmTypeEnum.Raw, txt, KCT_GameStates.KACAlarmUT);
-                        KCTDebug.Log("Alarm created with ID: " + KCT_GameStates.KACAlarmId);
+                        if (alarm == null)
+                        {
+                            AlarmTypeRaw alarmToSet = new AlarmTypeRaw
+                            {
+                                title = "Construction",
+                                description = txt,
+                                actions =
+                            {
+                                warp = AlarmActions.WarpEnum.KillWarp,
+                                message = AlarmActions.MessageEnum.Yes
+                            },
+                                ut = KCT_GameStates.KACAlarmUT
+                            };
+                            AlarmClockScenario.AddAlarm(alarmToSet);
+                            KCTDebug.Log("Alarm created with ID: " + alarm.Id);
+                        }
                     }
                 }
             }

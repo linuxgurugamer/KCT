@@ -85,7 +85,6 @@
     <Compile Include="HyperEdit_Utilities.cs" />
     <Compile Include="IKCTBuildItem.cs" />
     <Compile Include="InstallChecker.cs" />
-    <Compile Include="KACWrapper.cs" />
     <Compile Include="KCTDebug.cs" />
     <Compile Include="KCT_AirlaunchPrep.cs" />
     <Compile Include="KCT_BuildListStorage.cs" />
