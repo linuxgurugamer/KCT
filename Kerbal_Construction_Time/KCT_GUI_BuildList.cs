@@ -191,80 +191,67 @@ namespace KerbalConstructionTime
                     {
                         KCTDebug.Log("KAC Alarm being created!");
                         KCT_GameStates.KACAlarmUT = (buildItem.GetTimeLeft() + UT);
-                        AlarmTypeBase alarm = null;
                         AlarmTypeBase alarmCheck = AlarmClockScenario.GetNextAlarm(UT);
+                        AlarmTypeBase thisAlarm = alarmCheck;
                         while (true)
                         {
                             try
                             {
-                                alarmCheck = AlarmClockScenario.GetNextAlarm(alarmCheck.ut);
-                                if (alarmCheck.title.Equals("Construction"))
+                                if (thisAlarm.title.Equals("Construction"))
                                 {
-                                    alarm = alarmCheck;
-                                    break;
+                                    return;
                                 }
-                                if (alarmCheck == null)
+                                else
                                 {
-                                    break;
+                                    alarmCheck = thisAlarm;
                                 }
+                                thisAlarm = AlarmClockScenario.GetNextAlarm(alarmCheck.ut);
                             }
                             catch
                             {
-                                break;
-                            }
-                        }
-                        try
-                        {
-                            if (alarm != null)
-                            {
-                                KCTDebug.Log("Removing existing alarm");
-                                AlarmClockScenario.DeleteAlarm(alarmCheck.Id);
-                            }
-                        }
-                        catch
-                        {
-                            //just to suppress exceptions from null comparisons.
-                        }
-                        txt = "KCT: ";
-                        if (buildItem.GetListType() == KCT_BuildListVessel.ListType.Reconditioning)
-                        {
-                            KCT_Recon_Rollout reconRoll = buildItem as KCT_Recon_Rollout;
-                            if (reconRoll.RRType == KCT_Recon_Rollout.RolloutReconType.Reconditioning)
-                            {
-                                txt += reconRoll.launchPadID + " Reconditioning";
-                            }
-                            else if (reconRoll.RRType == KCT_Recon_Rollout.RolloutReconType.Rollout)
-                            {
-                                KCT_BuildListVessel associated = reconRoll.KSC.VABWarehouse.FirstOrDefault(blv => blv.id.ToString() == reconRoll.associatedID);
-                                txt += associated.shipName + " rollout at " + reconRoll.launchPadID;
-                            }
-                            else if (reconRoll.RRType == KCT_Recon_Rollout.RolloutReconType.Rollback)
-                            {
-                                KCT_BuildListVessel associated = reconRoll.KSC.VABWarehouse.FirstOrDefault(blv => blv.id.ToString() == reconRoll.associatedID);
-                                txt += associated.shipName + " rollback at " + reconRoll.launchPadID;
-                            }
-                            else
-                            {
-                                txt += buildItem.GetItemName() + " Complete";
-                            }
-                        }
-                        else
-                            txt += buildItem.GetItemName() + " Complete";
-                        if (alarm == null)
-                        {
-                            AlarmTypeRaw alarmToSet = new AlarmTypeRaw
-                            {
-                                title = "Construction",
-                                description = txt,
-                                actions =
+                                AlarmTypeBase alarm = alarmCheck;
+                                txt = "KCT: ";
+                                if (buildItem.GetListType() == KCT_BuildListVessel.ListType.Reconditioning)
+                                {
+                                    KCT_Recon_Rollout reconRoll = buildItem as KCT_Recon_Rollout;
+                                    if (reconRoll.RRType == KCT_Recon_Rollout.RolloutReconType.Reconditioning)
+                                    {
+                                        txt += reconRoll.launchPadID + " Reconditioning";
+                                    }
+                                    else if (reconRoll.RRType == KCT_Recon_Rollout.RolloutReconType.Rollout)
+                                    {
+                                        KCT_BuildListVessel associated = reconRoll.KSC.VABWarehouse.FirstOrDefault(blv => blv.id.ToString() == reconRoll.associatedID);
+                                        txt += associated.shipName + " rollout at " + reconRoll.launchPadID;
+                                    }
+                                    else if (reconRoll.RRType == KCT_Recon_Rollout.RolloutReconType.Rollback)
+                                    {
+                                        KCT_BuildListVessel associated = reconRoll.KSC.VABWarehouse.FirstOrDefault(blv => blv.id.ToString() == reconRoll.associatedID);
+                                        txt += associated.shipName + " rollback at " + reconRoll.launchPadID;
+                                    }
+                                    else
+                                    {
+                                        txt += buildItem.GetItemName() + " Complete";
+                                    }
+                                }
+                                else
+                                    txt += buildItem.GetItemName() + " Complete";
+                                if (alarm == null)
+                                {
+                                    AlarmTypeRaw alarmToSet = new AlarmTypeRaw
+                                    {
+                                        title = "Construction",
+                                        description = txt,
+                                        actions =
                             {
                                 warp = AlarmActions.WarpEnum.KillWarp,
                                 message = AlarmActions.MessageEnum.Yes
                             },
-                                ut = KCT_GameStates.KACAlarmUT
-                            };
-                            AlarmClockScenario.AddAlarm(alarmToSet);
-                            KCTDebug.Log("Alarm created with ID: " + alarm.Id);
+                                        ut = KCT_GameStates.KACAlarmUT
+                                    };
+                                    AlarmClockScenario.AddAlarm(alarmToSet);
+                                    KCTDebug.Log("Alarm created with ID: " + alarm.Id);
+                                }
+                            }
                         }
                     }
                 }
