@@ -8,7 +8,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{612C9FFF-5490-4D3D-AE97-E9622441AA8D}"
 	ProjectSection(SolutionItems) = preProject
 		buildRelease.bat = buildRelease.bat
-		deploy-173.bat = deploy-173.bat
 		deploy.bat = deploy.bat
 		jenkins-180.txt = jenkins-180.txt
 		KerbalConstructionTime-173.version = KerbalConstructionTime-173.version
