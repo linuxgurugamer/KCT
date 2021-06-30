@@ -45,14 +45,14 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="MagiCore">
-      <HintPath>R:\KSP_1.12.0_dev\GameData\MagiCore\Plugins\MagiCore.dll</HintPath>
+      <HintPath>$(KSPDIR)\GameData\MagiCore\Plugins\MagiCore.dll</HintPath>
     </Reference>
     <Reference Include="SpaceTuxUtility">
-      <HintPath>R:\KSP_1.12.0_dev\GameData\SpaceTuxLibrary\Plugins\SpaceTuxUtility.dll</HintPath>
+      <HintPath>$(KSPDIR)\GameData\SpaceTuxLibrary\Plugins\SpaceTuxUtility.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="ClickThroughBlocker">
-      <HintPath>R:\KSP_1.12.0_dev\GameData\000_ClickThroughBlocker\Plugins\ClickThroughBlocker.dll</HintPath>
+			<HintPath>$(KSPDIR)\GameData\000_ClickThroughBlocker\Plugins\ClickThroughBlocker.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System">
@@ -68,7 +68,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="ToolbarControl">
-      <HintPath>R:\KSP_1.12.0_dev\GameData\001_ToolbarControl\Plugins\ToolbarControl.dll</HintPath>
+      <HintPath>$(KSPDIR)\GameData\001_ToolbarControl\Plugins\ToolbarControl.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
