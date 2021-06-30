@@ -292,7 +292,7 @@ namespace KerbalConstructionTime
                 KCT_GameStates.settings.OverrideLaunchButton = overrideLaunchBtn;
                 KCT_GameStates.settings.Debug = debug;
                 KCT_GameStates.settings.AutoKACAlarms = autoAlarms;
-                // KCT_GameStates.settings.PreferBlizzyToolbar = useBlizzyToolbar;
+                KCT_GameStates.settings.AutoStockAlarms = autoStockAlarms;
                 KCT_GameStates.settings.CheckForDebugUpdates = debugUpdateChecking;
 
                 KCT_GameStates.settings.Save();
@@ -368,8 +368,8 @@ namespace KerbalConstructionTime
 
             forceStopWarp = GUILayout.Toggle(forceStopWarp, "Auto Stop TimeWarp", HighLogic.Skin.button);
             autoAlarms = GUILayout.Toggle(autoAlarms, "Auto KAC Alarms", HighLogic.Skin.button);
+            autoStockAlarms = GUILayout.Toggle(autoStockAlarms, "Auto Stock Alarms", HighLogic.Skin.button);
             overrideLaunchBtn = GUILayout.Toggle(overrideLaunchBtn, "Override Launch Button", HighLogic.Skin.button);
-            //useBlizzyToolbar = GUILayout.Toggle(useBlizzyToolbar, "Use Toolbar Mod", HighLogic.Skin.button);
             disableAllMsgs = !GUILayout.Toggle(!disableAllMsgs, "Use Message System", HighLogic.Skin.button);
             debug = GUILayout.Toggle(debug, "Debug Logging", HighLogic.Skin.button);
 

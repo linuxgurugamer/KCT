@@ -19,6 +19,8 @@ namespace KerbalConstructionTime
         [Persistent]
         public bool AutoKACAlarms;
         [Persistent]
+        public bool AutoStockAlarms;
+        [Persistent]
         public bool Debug;
         [Persistent]
         public bool OverrideLaunchButton;
@@ -41,6 +43,7 @@ namespace KerbalConstructionTime
             Debug = false;
             OverrideLaunchButton = true;
             AutoKACAlarms = true;
+            AutoStockAlarms = true;
             PreferBlizzyToolbar = false;
         }
 

@@ -1595,8 +1595,7 @@ namespace KerbalConstructionTime
             CenterWindow(ref crewListWindowPosition);
         }
 
-        public static bool forceStopWarp, disableAllMsgs, debug, overrideLaunchBtn, autoAlarms;
-        //public static bool useBlizzyToolbar, 
+        public static bool forceStopWarp, disableAllMsgs, debug, overrideLaunchBtn, autoAlarms, autoStockAlarms;
         public static bool debugUpdateChecking;
         public static int newTimewarp;
 
@@ -1612,7 +1611,7 @@ namespace KerbalConstructionTime
             debug = KCT_GameStates.settings.Debug;
             overrideLaunchBtn = KCT_GameStates.settings.OverrideLaunchButton;
             autoAlarms = KCT_GameStates.settings.AutoKACAlarms;
-            //useBlizzyToolbar = KCT_GameStates.settings.PreferBlizzyToolbar;
+            autoStockAlarms = KCT_GameStates.settings.AutoStockAlarms;
             debugUpdateChecking = KCT_GameStates.settings.CheckForDebugUpdates;
 
             showSettings = !showSettings;

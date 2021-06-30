@@ -84,6 +84,8 @@ namespace KerbalConstructionTime
         public static List<bool> showWindows = new List<bool> { false, true }; //build list, editor
         public static string KACAlarmId = "";
         public static double KACAlarmUT = 0;
+        public static uint StockAlarmId = 0;
+        public static double StockAlarmUT = 0;
 
         public static KCT_OnLoadError erroredDuringOnLoad = new KCT_OnLoadError();
 

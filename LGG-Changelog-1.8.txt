@@ -1,5 +1,8 @@
 ChangeLog
 
+1.4.10
+	Added stock alarm clock functionality to mirror the KAC alarm clock functionality (bugs and all).  This is only for KSP 1.12
+
 1.4.9
 	Added code to check for kerbals in external seats, and to disallow recover if occupied. Tested in both Editor and Tracking Station
 	Changed min version to be 1.10.1.  will probably work for the 1.8+, but no support

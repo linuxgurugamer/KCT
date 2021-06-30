@@ -8,10 +8,7 @@ rem VERSIONFILE is the name of the version file, usually the same as GAMEDATA,
 rem    but not always
 
 set H=%KSPDIR%
-rem set H=R:\KSP_1.8.1_dev_FinalFrontier
 
-
-rem set H=R:\KSP_1.7.3-GC-OSE
 set GAMEDIR=KerbalConstructionTime
 set GAMEDATA="GameData"
 set VERSIONFILE=%GAMEDIR%-Stock.version

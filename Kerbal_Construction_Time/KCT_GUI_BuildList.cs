@@ -184,50 +184,15 @@ namespace KerbalConstructionTime
                     KCT_GameStates.lastWarpRate = 0;
                 }
 
-                if (KCT_GameStates.settings.AutoKACAlarms && KACWrapper.APIReady && buildItem.GetTimeLeft() > 30) //don't check if less than 30 seconds to completion. Might fix errors people are seeing
+                if (buildItem.GetTimeLeft() > 30)
                 {
-                    double UT = Planetarium.GetUniversalTime();
-                    if (!KCT_Utilities.ApproximatelyEqual(KCT_GameStates.KACAlarmUT - UT, buildItem.GetTimeLeft()))
+                    if (KCT_GameStates.settings.AutoKACAlarms && KACWrapper.APIReady) //don't check if less than 30 seconds to completion. Might fix errors people are seeing
                     {
-                        KCTDebug.Log("KAC Alarm being created!");
-                        KCT_GameStates.KACAlarmUT = (buildItem.GetTimeLeft() + UT);
-                        KACWrapper.KACAPI.KACAlarm alarm = KACWrapper.KAC.Alarms.FirstOrDefault(a => a.ID == KCT_GameStates.KACAlarmId);
-                        if (alarm == null)
-                        {
-                            alarm = KACWrapper.KAC.Alarms.FirstOrDefault(a => (a.Name.StartsWith("KCT: ")));
-                        }
-                        if (alarm != null)
-                        {
-                            KCTDebug.Log("Removing existing alarm");
-                            KACWrapper.KAC.DeleteAlarm(alarm.ID);
-                        }
-                        txt = "KCT: ";
-                        if (buildItem.GetListType() == KCT_BuildListVessel.ListType.Reconditioning)
-                        {
-                            KCT_Recon_Rollout reconRoll = buildItem as KCT_Recon_Rollout;
-                            if (reconRoll.RRType == KCT_Recon_Rollout.RolloutReconType.Reconditioning)
-                            {
-                                txt += reconRoll.launchPadID + " Reconditioning";
-                            }
-                            else if (reconRoll.RRType == KCT_Recon_Rollout.RolloutReconType.Rollout)
-                            {
-                                KCT_BuildListVessel associated = reconRoll.KSC.VABWarehouse.FirstOrDefault(blv => blv.id.ToString() == reconRoll.associatedID);
-                                txt += associated.shipName + " rollout at " + reconRoll.launchPadID;
-                            }
-                            else if (reconRoll.RRType == KCT_Recon_Rollout.RolloutReconType.Rollback)
-                            {
-                                KCT_BuildListVessel associated = reconRoll.KSC.VABWarehouse.FirstOrDefault(blv => blv.id.ToString() == reconRoll.associatedID);
-                                txt += associated.shipName + " rollback at " + reconRoll.launchPadID;
-                            }
-                            else
-                            {
-                                txt += buildItem.GetItemName() + " Complete";
-                            }
-                        }
-                        else
-                            txt += buildItem.GetItemName() + " Complete";
-                        KCT_GameStates.KACAlarmId = KACWrapper.KAC.CreateAlarm(KACWrapper.KACAPI.AlarmTypeEnum.Raw, txt, KCT_GameStates.KACAlarmUT);
-                        KCTDebug.Log("Alarm created with ID: " + KCT_GameStates.KACAlarmId);
+                        DoKACAlarms(buildItem);
+                    }
+                    if (KCT_GameStates.settings.AutoStockAlarms) //don't check if less than 30 seconds to completion. Might fix errors people are seeing
+                    {
+                        DoStockAlarms(buildItem);
                     }
                 }
             }
@@ -385,7 +350,7 @@ namespace KerbalConstructionTime
                             GUILayout.Label(MagiCore.Utilities.GetColonFormattedTime(b.timeLeft), GUILayout.Width(width2));
                         else
                             GUILayout.Label("Est: " + MagiCore.Utilities.GetColonFormattedTime((b.buildPoints + b.integrationPoints - b.progress) / KCT_Utilities.GetBuildRate(0, KCT_BuildListVessel.ListType.VAB, null)), GUILayout.Width(width2));
-                       // GUILayout.Label(Math.Round(b.buildPoints, 2).ToString(), GUILayout.Width(width1 / 2 + 10));
+                        // GUILayout.Label(Math.Round(b.buildPoints, 2).ToString(), GUILayout.Width(width1 / 2 + 10));
                         GUILayout.EndHorizontal();
                     }
 
@@ -1005,7 +970,7 @@ namespace KerbalConstructionTime
                     // Can move up if item above is not a parent.
                     List<string> parentList = KerbalConstructionTimeData.techNameToParents[t.techID];
                     bool canMoveUp = i > 0 && (parentList == null || !parentList.Contains(techList[i - 1].techID));
-                    
+
                     // Can move down if item below is not a child.
                     List<string> nextParentList = i < techList.Count - 1 ? KerbalConstructionTimeData.techNameToParents[techList[i + 1].techID] : null;
                     bool canMoveDown = nextParentList == null || !nextParentList.Contains(t.techID);
@@ -1125,6 +1090,136 @@ namespace KerbalConstructionTime
             ClampWindow(ref buildListWindowPosition, strict: true);
         }
 
+        static void DoStockAlarms(IKCTBuildItem buildItem)
+        {
+            double UT = Planetarium.GetUniversalTime();
+
+            if (!KCT_Utilities.ApproximatelyEqual(KCT_GameStates.StockAlarmUT - UT, buildItem.GetTimeLeft()))
+            {
+                KCTDebug.Log("Stock Alarm being created!");
+                KCT_GameStates.StockAlarmUT = (buildItem.GetTimeLeft() + UT);
+
+                bool alarm = AlarmClockScenario.AlarmExists(KCT_GameStates.StockAlarmId);
+                if (alarm)
+                {
+                    KCTDebug.Log("Removing existing alarm");
+                    AlarmClockScenario.DeleteAlarm(KCT_GameStates.StockAlarmId);
+                }
+
+                if (!alarm)
+                {
+                    AlarmTypeBase alarmCheck = AlarmClockScenario.GetNextAlarm(UT);
+                    AlarmTypeBase thisAlarm = alarmCheck;
+                    while (thisAlarm != null)
+                    {
+                        if (thisAlarm.description.Contains("KCT:"))
+                        {
+                            KCTDebug.Log("Removing existing alarm");
+                            AlarmClockScenario.DeleteAlarm(thisAlarm);
+                            break;
+                        }
+                        else
+                        {
+                            alarmCheck = thisAlarm;
+                        }
+                        thisAlarm = AlarmClockScenario.GetNextAlarm(alarmCheck.ut);
+                    }
+                }
+
+                string txt = "KCT: ";
+                string finalTitle = "KCT Construction";
+                if (buildItem.GetListType() == KCT_BuildListVessel.ListType.Reconditioning)
+                {
+                    KCT_Recon_Rollout reconRoll = buildItem as KCT_Recon_Rollout;
+                    if (reconRoll.RRType == KCT_Recon_Rollout.RolloutReconType.Reconditioning)
+                    {
+                        txt += reconRoll.launchPadID + " Reconditioning";
+                        finalTitle = "KCT Reconditioning";
+                    }
+                    else if (reconRoll.RRType == KCT_Recon_Rollout.RolloutReconType.Rollout)
+                    {
+                        KCT_BuildListVessel associated = reconRoll.KSC.VABWarehouse.FirstOrDefault(blv => blv.id.ToString() == reconRoll.associatedID);
+                        txt += associated.shipName + " rollout at " + reconRoll.launchPadID;
+                        finalTitle = "KCT Rollout";
+                    }
+                    else if (reconRoll.RRType == KCT_Recon_Rollout.RolloutReconType.Rollback)
+                    {
+                        KCT_BuildListVessel associated = reconRoll.KSC.VABWarehouse.FirstOrDefault(blv => blv.id.ToString() == reconRoll.associatedID);
+                        txt += associated.shipName + " rollback at " + reconRoll.launchPadID;
+                        finalTitle = "KCT Rollback";
+                    }
+                    else
+                    {
+                        txt += buildItem.GetItemName() + " Complete";
+                    }
+                }
+                else
+                {
+                    txt += buildItem.GetItemName() + " Complete";
+                }
+                AlarmTypeRaw alarmToSet = new AlarmTypeRaw
+                {
+                    title = finalTitle,
+                    description = txt,
+                    actions =
+                            {
+                                warp = AlarmActions.WarpEnum.KillWarp,
+                                message = AlarmActions.MessageEnum.Yes
+                            },
+                    ut = KCT_GameStates.StockAlarmUT
+                };
+                AlarmClockScenario.AddAlarm(alarmToSet);
+                KCT_GameStates.StockAlarmId = alarmToSet.Id;
+                KCTDebug.Log("Stock Alarm created with ID: " + alarmToSet.Id);
+            }
+        }
+
+        static void DoKACAlarms(IKCTBuildItem buildItem)
+        {
+            double UT = Planetarium.GetUniversalTime();
+            if (!KCT_Utilities.ApproximatelyEqual(KCT_GameStates.KACAlarmUT - UT, buildItem.GetTimeLeft()))
+            {
+                KCTDebug.Log("KAC Alarm being created!");
+                KCT_GameStates.KACAlarmUT = (buildItem.GetTimeLeft() + UT);
+                KACWrapper.KACAPI.KACAlarm alarm = KACWrapper.KAC.Alarms.FirstOrDefault(a => a.ID == KCT_GameStates.KACAlarmId);
+                if (alarm == null)
+                {
+                    alarm = KACWrapper.KAC.Alarms.FirstOrDefault(a => (a.Name.StartsWith("KCT: ")));
+                }
+                if (alarm != null)
+                {
+                    KCTDebug.Log("Removing existing alarm");
+                    KACWrapper.KAC.DeleteAlarm(alarm.ID);
+                }
+                string txt = "KCT: ";
+                if (buildItem.GetListType() == KCT_BuildListVessel.ListType.Reconditioning)
+                {
+                    KCT_Recon_Rollout reconRoll = buildItem as KCT_Recon_Rollout;
+                    if (reconRoll.RRType == KCT_Recon_Rollout.RolloutReconType.Reconditioning)
+                    {
+                        txt += reconRoll.launchPadID + " Reconditioning";
+                    }
+                    else if (reconRoll.RRType == KCT_Recon_Rollout.RolloutReconType.Rollout)
+                    {
+                        KCT_BuildListVessel associated = reconRoll.KSC.VABWarehouse.FirstOrDefault(blv => blv.id.ToString() == reconRoll.associatedID);
+                        txt += associated.shipName + " rollout at " + reconRoll.launchPadID;
+                    }
+                    else if (reconRoll.RRType == KCT_Recon_Rollout.RolloutReconType.Rollback)
+                    {
+                        KCT_BuildListVessel associated = reconRoll.KSC.VABWarehouse.FirstOrDefault(blv => blv.id.ToString() == reconRoll.associatedID);
+                        txt += associated.shipName + " rollback at " + reconRoll.launchPadID;
+                    }
+                    else
+                    {
+                        txt += buildItem.GetItemName() + " Complete";
+                    }
+                }
+                else
+                    txt += buildItem.GetItemName() + " Complete";
+                KCT_GameStates.KACAlarmId = KACWrapper.KAC.CreateAlarm(KACWrapper.KACAPI.AlarmTypeEnum.Raw, txt, KCT_GameStates.KACAlarmUT);
+                KCTDebug.Log("KAC Alarm created with ID: " + KCT_GameStates.KACAlarmId);
+            }
+        }
         public static void CancelTechNode(int index)
         {
 
@@ -1277,8 +1372,8 @@ namespace KerbalConstructionTime
                     KCT_GameStates.ActiveKSC.SPHList.Insert(0, b);
                 }
             }
-            if (!b.isFinished 
-                && (KCT_PresetManager.Instance.ActivePreset.generalSettings.MaxRushClicks == 0 || b.rushBuildClicks < KCT_PresetManager.Instance.ActivePreset.generalSettings.MaxRushClicks) 
+            if (!b.isFinished
+                && (KCT_PresetManager.Instance.ActivePreset.generalSettings.MaxRushClicks == 0 || b.rushBuildClicks < KCT_PresetManager.Instance.ActivePreset.generalSettings.MaxRushClicks)
                 && GUILayout.Button("Rush Build 10%\n√" + Math.Round(b.GetRushCost())))
             {
                 b.DoRushBuild();
