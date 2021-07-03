@@ -24,7 +24,7 @@ namespace KerbalConstructionTime
 
         private static bool unlockEditor;
 
-        private static Vector2 scrollPos, VABMergeScroll, SPHMergeScroll;
+        private static Vector2 scrollPos, buildPlanScrollPos, VABMergeScroll, SPHMergeScroll;
 
         private static Rect iconPosition = new Rect(Screen.width / 4, Screen.height - 30, 50, 30);//110
         private static Rect mainWindowPosition = new Rect(Screen.width / 3.5f, Screen.height / 3.5f, 350, 200);
