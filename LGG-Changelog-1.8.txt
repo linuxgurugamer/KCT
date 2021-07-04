@@ -1,5 +1,12 @@
 ChangeLog
 
+1.4.11
+	Thanks to @tivec for this:
+		Add scroll position for build plan window
+	Thanks to @DarthPointer for this:
+		Build Points of merged vessels is now calculated in a better way, now consistent with parameter name "Merging Time Percent".
+		KRASH simulation was reenabling merge buttons for already-merged vessels.
+
 1.4.10
 	Added stock alarm clock functionality to mirror the KAC alarm clock functionality (bugs and all).  This is only for KSP 1.12
 
