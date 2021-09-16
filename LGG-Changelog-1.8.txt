@@ -1,5 +1,9 @@
 ChangeLog
 
+1.4.11.1
+	Added AssemblyFileVersion
+	Updated version file for 1.12
+
 1.4.11
 	Thanks to @tivec for this:
 		Add scroll position for build plan window
