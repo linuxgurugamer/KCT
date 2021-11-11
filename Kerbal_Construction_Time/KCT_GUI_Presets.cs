@@ -161,7 +161,7 @@ namespace KerbalConstructionTime
             }
             if (GUILayout.Button("View Wiki in Browser"))
             {
-                Application.OpenURL("https://github.com/magico13/KCT/wiki");
+                Application.OpenURL("https://github.com/linuxgurugamer/KCT/wiki");
             }
             GUILayout.EndHorizontal();
 

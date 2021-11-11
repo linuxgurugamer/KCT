@@ -1,5 +1,8 @@
 ChangeLog
 
+1.4.11.2 
+	Updated link to Wiki to point to current one, also updated bad links on wiki
+
 1.4.11.1
 	Added AssemblyFileVersion
 	Updated version file for 1.12
