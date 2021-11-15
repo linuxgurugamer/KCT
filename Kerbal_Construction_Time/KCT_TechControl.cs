@@ -162,16 +162,47 @@ namespace KerbalConstructionTime
         public string GetBlockingTech(KCT_GameStates.KCT_TechItemIlist<KCT_TechItem> techList)
         {
             string blockingTech = null;
+            string anyToUnlock = KerbalConstructionTimeData.techNameToAnyToUnlock[techID];
             List<string> parentList = KerbalConstructionTimeData.techNameToParents[techID];
+            
+            if (parentList == null)
+                return null;
 
-            foreach (var t in techList)
-            {
-                if (parentList != null && parentList.Contains(t.techID))
+            // if node can unlock with any parent,
+            // any researched parent means it's unblocked
+            if (anyToUnlock == "True")
+                foreach (var p in parentList)
                 {
-                    blockingTech = t.techName;
-                    break;
+                    ProtoTechNode pn = ResearchAndDevelopment.Instance.GetTechState(p);
+                    if (pn != null && pn.state == RDTech.State.Available)
+                    {
+                        blockingTech = null;
+                        break;
+                    }
+                    blockingTech = KerbalConstructionTimeData.techNameToTitle[p];
                 }
-            }
+            // otherwise, can use old method. is it efficient, tho? seems like
+            // rather than checking the entire list of techs being researched,
+            // one could instead check the (usually smaller) list of parents
+            // to see if any is unavailable ~ monstah
+            else
+                //    foreach (var t in techList)
+                //    {
+                //        if (parentList.Contains(t.techID))
+                //        {
+                //            blockingTech = t.techName;
+                //            break;
+                //        }
+                //    }
+                foreach (var p in parentList)
+                {
+                    ProtoTechNode pn = ResearchAndDevelopment.Instance.GetTechState(p);
+                    if (pn == null || pn.state == RDTech.State.Unavailable)
+                    {
+                        blockingTech = KerbalConstructionTimeData.techNameToTitle[p];
+                        break;
+                    }
+                }
 
             return blockingTech;
         }

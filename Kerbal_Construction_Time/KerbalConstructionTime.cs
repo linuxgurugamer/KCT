@@ -31,6 +31,7 @@ namespace KerbalConstructionTime
     public class KerbalConstructionTimeData : ScenarioModule
     {
         public static Dictionary<string, string> techNameToTitle = new Dictionary<string, string>();
+        public static Dictionary<string, string> techNameToAnyToUnlock = new Dictionary<string, string>();
         public static Dictionary<string, List<string>> techNameToParents = new Dictionary<string, List<string>>();
 
         protected void LoadTree()
@@ -64,6 +65,9 @@ namespace KerbalConstructionTime
                                     pList.Add(p.GetValue("parentID"));
                             }
                             techNameToParents[techID] = pList;
+
+                            if (n.HasValue("anyToUnlock"))
+                                techNameToAnyToUnlock[techID] = n.GetValue("anyToUnlock");
                         }
                     }
                 }
