@@ -75,7 +75,7 @@ namespace KerbalConstructionTime
 
         // these are private/static for efficiency, this way it only initialized them one time
         //private static bool buildListVarsInitted = false;
-        private static GUIStyle redText, yellowText, greenText, normalButton, yellowButton, redButton, greenButton;
+        private static GUIStyle redText, yellowText, greenText, normalButton, yellowButton, redButton, greenButton, normalTextColor, normalButtonColor;
 
         internal static void InitBuildListVars()
         {
@@ -102,6 +102,10 @@ namespace KerbalConstructionTime
             greenButton.normal.textColor = Color.green;
             greenButton.hover.textColor = Color.green;
             greenButton.active.textColor = Color.green;
+
+            normalTextColor = new GUIStyle(GUI.skin.label);
+            normalButtonColor = new GUIStyle(GUI.skin.button);
+
         }
 
         public static void DrawBuildListWindow(int windowID)
@@ -389,8 +393,8 @@ namespace KerbalConstructionTime
                         KCT_Recon_Rollout rollout = KCT_GameStates.ActiveKSC.GetReconRollout(KCT_Recon_Rollout.RolloutReconType.Rollout, launchSite);
                         KCT_Recon_Rollout rollback = KCT_GameStates.ActiveKSC.Recon_Rollout.FirstOrDefault(r => r.associatedID == b.id.ToString() && r.RRType == KCT_Recon_Rollout.RolloutReconType.Rollback);
                         KCT_Recon_Rollout recovery = KCT_GameStates.ActiveKSC.Recon_Rollout.FirstOrDefault(r => r.associatedID == b.id.ToString() && r.RRType == KCT_Recon_Rollout.RolloutReconType.Recovery);
-                        GUIStyle textColor = new GUIStyle(GUI.skin.label);
-                        GUIStyle buttonColor = new GUIStyle(GUI.skin.button);
+                        GUIStyle textColor = normalTextColor;
+                        GUIStyle buttonColor = normalButtonColor;
 
                         VesselPadStatus padStatus = VesselPadStatus.InStorage;
                         if (rollback != null)
@@ -772,7 +776,7 @@ namespace KerbalConstructionTime
                         if (!b.allPartsValid)
                             continue;
                         string status = "";
-                        GUIStyle textColor = new GUIStyle(GUI.skin.label);
+                        GUIStyle textColor = normalTextColor;
 
                         KCT_Recon_Rollout recovery = KCT_GameStates.ActiveKSC.Recon_Rollout.FirstOrDefault(r => r.associatedID == b.id.ToString() && r.RRType == KCT_Recon_Rollout.RolloutReconType.Recovery);
                         if (recovery != null)

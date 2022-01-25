@@ -6,6 +6,7 @@ using UnityEngine;
 using System.Collections;
 using KSP.UI.Screens;
 using ToolbarControl_NS;
+using SpaceTuxUtility;
 
 namespace KerbalConstructionTime
 {
