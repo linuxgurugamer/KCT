@@ -1236,7 +1236,38 @@ namespace KerbalConstructionTime
                 for (int i = 0; i < KCT_GameStates.TechList.Count; i++)
                 {
                     List<string> parentList = KerbalConstructionTimeData.techNameToParents[KCT_GameStates.TechList[i].techID];
-                    if (parentList.Contains(node.techID))
+                    string anyToUnlock = KerbalConstructionTimeData.techNameToAnyToUnlock[KCT_GameStates.TechList[i].techID];
+                    bool delete = false;
+
+                    if (!parentList.Contains(node.techID))
+                        continue;
+
+                    // if node has AnyToUnlock, needs to check for any still valid parent
+                    if (anyToUnlock == "True")
+                    {
+                        delete = true;
+                        foreach (string p in parentList)
+                        {
+                            if (p == node.techID) continue;
+
+                            ProtoTechNode pn = ResearchAndDevelopment.Instance.GetTechState(p);
+                            if ((KCT_GameStates.TechList.FindIndex(t => t.techID == p) >= 0))
+                            {
+                                delete = false;
+                                break;
+                            }
+                            else if ((pn != null && pn.state == RDTech.State.Available))
+                            {
+                                delete = false;
+                                break;
+                            }
+                        }
+                    }
+                    // otherwise, just cancel it
+                    else
+                        delete = true;
+
+                    if (delete)
                     {
                         CancelTechNode(i);
                         // recheck list in case multiple levels of children were deleted.
