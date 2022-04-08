@@ -63,7 +63,7 @@ namespace KerbalConstructionTime
             }
             upgrades += upgradeDelta;
             variables.Add("L", level.ToString());
-            variables.Add("LM", level.ToString());
+            variables.Add("LM", levelMax.ToString());
             variables.Add("N", upgrades.ToString());
             variables.Add("I", index.ToString());
             variables.Add("R", KCT_Utilities.BuildingUpgradeLevel(SpaceCenterFacility.ResearchAndDevelopment).ToString());
