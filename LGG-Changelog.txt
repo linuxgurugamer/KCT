@@ -1,7 +1,11 @@
 ChangeLog
 
-1.4.11.3 (unreleased)
+1.4.11.3
 	Fixed three lines where GUIStyle was being allocated during an OnGUI call multiple times, leading to memory leaks
+	Thanks to github user @monstrim for this:
+		Technodes now check for AnyToUnlock for progress/cancelling
+	Thanks to github user @Horathio for this:
+		Fixed typo in variable assignment of ParseBuildRateFormula()
 
 1.4.11.2 
 	Updated link to Wiki to point to current one, also updated bad links on wiki
