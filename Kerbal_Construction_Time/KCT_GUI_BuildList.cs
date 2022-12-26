@@ -110,10 +110,6 @@ namespace KerbalConstructionTime
 
         public static void DrawBuildListWindow(int windowID)
         {
-#if false
-            if (!buildListVarsInitted)
-                InitBuildListVars();
-#endif
             int width1 = 120;
             int width2 = 100;
             int butW = 20;
@@ -1407,11 +1403,15 @@ namespace KerbalConstructionTime
                     KCT_GameStates.ActiveKSC.SPHList.Insert(0, b);
                 }
             }
-            if (!b.isFinished
-                && (KCT_PresetManager.Instance.ActivePreset.generalSettings.MaxRushClicks == 0 || b.rushBuildClicks < KCT_PresetManager.Instance.ActivePreset.generalSettings.MaxRushClicks)
-                && GUILayout.Button("Rush Build 10%\n√" + Math.Round(b.GetRushCost())))
+            if (HighLogic.CurrentGame.Mode == Game.Modes.CAREER || 
+                HighLogic.CurrentGame.Mode == Game.Modes.SCIENCE_SANDBOX)
             {
-                b.DoRushBuild();
+                if (!b.isFinished
+                    && (KCT_PresetManager.Instance.ActivePreset.generalSettings.MaxRushClicks == 0 || b.rushBuildClicks < KCT_PresetManager.Instance.ActivePreset.generalSettings.MaxRushClicks)
+                    && GUILayout.Button("Rush Build 10%\n√" + Math.Round(b.GetRushCost())))
+                {
+                    b.DoRushBuild();
+                }
             }
 #if false
             if ((b.type == KCT_BuildListVessel.ListType.SPH || b.type == KCT_BuildListVessel.ListType.VAB) &&

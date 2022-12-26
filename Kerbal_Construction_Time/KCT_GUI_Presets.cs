@@ -20,9 +20,6 @@ namespace KerbalConstructionTime
 
         public static void DrawPresetWindow(int windowID)
         {
-            GUIStyle yellowText = new GUIStyle(GUI.skin.label);
-            yellowText.normal.textColor = Color.yellow;
-
             if (WorkingPreset == null)
             {
                 SetNewWorkingPreset(new KCT_Preset(KCT_PresetManager.Instance.ActivePreset), false); //might need to copy instead of assign here

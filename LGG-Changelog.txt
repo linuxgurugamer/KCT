@@ -1,5 +1,11 @@
 ChangeLog
 
+1.4.11.4
+	Added check for game mode before displaying the "rush build" button.  Currently only allowd in Career & SCIENCE_SANDBOX 
+	Fixed a small memory leak
+	Thanks to user @TheJesuit for this:
+		Added new Preset:  AngleCan Progression
+	
 1.4.11.3
 	Fixed three lines where GUIStyle was being allocated during an OnGUI call multiple times, leading to memory leaks
 	Thanks to github user @monstrim for this:
