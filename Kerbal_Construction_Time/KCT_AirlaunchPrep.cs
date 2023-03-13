@@ -104,7 +104,7 @@ namespace KerbalConstructionTime
                         progress = progBefore;
                         if (TimeWarp.CurrentRate > 1f && KCT_GameStates.warpInitiated && this == KCT_GameStates.targetedItem)
                         {
-                            ScreenMessages.PostScreenMessage("Timewarp was stopped because there's insufficient funds to continue the rollout");
+                            ScreenMessages.PostScreenMessage(LocalCache.str_Messages_NoFundsToWarp); // "Timewarp was stopped because there's insufficient funds to continue the rollout"
                             TimeWarp.SetRate(0, true);
                             KCT_GameStates.warpInitiated = false;
                         }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using KSP.UI.Dialogs;
+using KSP.Localization;
 
 namespace KerbalConstructionTime
 {
@@ -31,7 +32,7 @@ namespace KerbalConstructionTime
 
             //preset selector
             GUILayout.BeginVertical();
-            GUILayout.Label("Presets", yellowText, GUILayout.ExpandHeight(false));
+            GUILayout.Label(LocalCache.str_Presets, yellowText, GUILayout.ExpandHeight(false)); // "Presets"
             //preset toolbar in a scrollview
             presetScrollView = GUILayout.BeginScrollView(presetScrollView, GUILayout.Width(presetPosition.width/6.0f)); //TODO: update HighLogic.Skin.textArea
             string[] presetShortNames = KCT_PresetManager.Instance.PresetShortNames(true);
@@ -61,18 +62,18 @@ namespace KerbalConstructionTime
             //presetIndex = GUILayout.Toolbar(presetIndex, presetNames);
 
             GUILayout.EndScrollView();
-            if (GUILayout.Button("Save as\nNew Preset", GUILayout.ExpandHeight(false)))
+            if (GUILayout.Button(LocalCache.btn_SaveAsNewPreset, GUILayout.ExpandHeight(false))) // "Save as\nNew Preset"
             {
                 //create new preset
                 SaveAsNewPreset(WorkingPreset);
             }
-            if (WorkingPreset.AllowDeletion && presetIndex != presetShortNames.Length - 1 && GUILayout.Button("Delete Preset")) //allowed to be deleted and isn't Custom
+            if (WorkingPreset.AllowDeletion && presetIndex != presetShortNames.Length - 1 && GUILayout.Button(LocalCache.btn_DeletePreset)) //allowed to be deleted and isn't Custom  | "Delete Preset"
             {
 
                 DialogGUIBase[] options = new DialogGUIBase[2];
-                options[0] = new DialogGUIButton("Delete File", DeleteActivePreset);
-                options[1] = new DialogGUIButton("Cancel", DummyVoid);
-                MultiOptionDialog dialog = new MultiOptionDialog("deletePresetPopup", "Are you sure you want to delete the selected Preset, file and all? This cannot be undone!", "Confirm Deletion", null, options);
+                options[0] = new DialogGUIButton(LocalCache.btn_DeleteFile, DeleteActivePreset); // "Delete File"
+                options[1] = new DialogGUIButton(LocalCache.Btn_Cancel, DummyVoid); // "Cancel"
+                MultiOptionDialog dialog = new MultiOptionDialog("deletePresetPopup", LocalCache.str_DeleteConfirmMsg, LocalCache.str_DeleteConfirmTitle, null, options); // "Are you sure you want to delete the selected Preset, file and all? This cannot be undone!" "Confirm Deletion"
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), dialog, false, HighLogic.UISkin);
             }
             GUILayout.EndVertical();
@@ -82,27 +83,27 @@ namespace KerbalConstructionTime
             presetMainScroll = GUILayout.BeginScrollView(presetMainScroll);
             //Preset info section)
             GUILayout.BeginVertical(HighLogic.Skin.textArea);
-            GUILayout.Label("Preset Name: " + WorkingPreset.name);
-            GUILayout.Label("Description: " + WorkingPreset.description);
-            GUILayout.Label("Author(s): " + WorkingPreset.author);
+            GUILayout.Label(Localizer.Format("#KCT_Presets_Name", WorkingPreset.name)); // "Preset Name: " + WorkingPreset.name
+            GUILayout.Label(Localizer.Format("#KCT_Presets_Description", WorkingPreset.description)); // "Description: " + WorkingPreset.description
+            GUILayout.Label(Localizer.Format("#KCT_Presets_Authors", WorkingPreset.author)); // "Author(s): " + WorkingPreset.author
             GUILayout.EndVertical();
 
             GUILayout.BeginHorizontal();
             //Features section
             GUILayout.BeginVertical();
-            GUILayout.Label("Features", yellowText);
+            GUILayout.Label(LocalCache.str_Features, yellowText); // "Features"
             GUILayout.BeginVertical(HighLogic.Skin.textArea);
-            WorkingPreset.generalSettings.Enabled= GUILayout.Toggle(WorkingPreset.generalSettings.Enabled, "Mod Enabled", HighLogic.Skin.button);
-            WorkingPreset.generalSettings.BuildTimes = GUILayout.Toggle(WorkingPreset.generalSettings.BuildTimes, "Build Times", HighLogic.Skin.button);
-            WorkingPreset.generalSettings.ReconditioningTimes = GUILayout.Toggle(WorkingPreset.generalSettings.ReconditioningTimes, "Launchpad Reconditioning", HighLogic.Skin.button);
-            WorkingPreset.generalSettings.ReconditioningBlocksPad = GUILayout.Toggle(WorkingPreset.generalSettings.ReconditioningBlocksPad, "Reconditioning Blocks Pad", HighLogic.Skin.button);
-            WorkingPreset.generalSettings.TechUnlockTimes = GUILayout.Toggle(WorkingPreset.generalSettings.TechUnlockTimes, "Tech Unlock Times", HighLogic.Skin.button);
-            WorkingPreset.generalSettings.KSCUpgradeTimes = GUILayout.Toggle(WorkingPreset.generalSettings.KSCUpgradeTimes, "KSC Upgrade Times", HighLogic.Skin.button);
-            WorkingPreset.generalSettings.TechUpgrades = GUILayout.Toggle(WorkingPreset.generalSettings.TechUpgrades, "Upgrades From Tech Tree", HighLogic.Skin.button);
-            WorkingPreset.generalSettings.SharedUpgradePool = GUILayout.Toggle(WorkingPreset.generalSettings.SharedUpgradePool, "Shared Upgrade Pool (KSCSwitcher)", HighLogic.Skin.button);
+            WorkingPreset.generalSettings.Enabled= GUILayout.Toggle(WorkingPreset.generalSettings.Enabled, LocalCache.str_Enabled, HighLogic.Skin.button); // "Mod Enabled"
+            WorkingPreset.generalSettings.BuildTimes = GUILayout.Toggle(WorkingPreset.generalSettings.BuildTimes, LocalCache.str_BuildTimes, HighLogic.Skin.button); // "Build Times"
+            WorkingPreset.generalSettings.ReconditioningTimes = GUILayout.Toggle(WorkingPreset.generalSettings.ReconditioningTimes, LocalCache.str_ReconditioningTimes, HighLogic.Skin.button); // "Launchpad Reconditioning"
+            WorkingPreset.generalSettings.ReconditioningBlocksPad = GUILayout.Toggle(WorkingPreset.generalSettings.ReconditioningBlocksPad, LocalCache.str_ReconditioningBlocksPad, HighLogic.Skin.button); // "Reconditioning Blocks Pad"
+            WorkingPreset.generalSettings.TechUnlockTimes = GUILayout.Toggle(WorkingPreset.generalSettings.TechUnlockTimes, LocalCache.str_TechUnlockTimes, HighLogic.Skin.button); // "Tech Unlock Times"
+            WorkingPreset.generalSettings.KSCUpgradeTimes = GUILayout.Toggle(WorkingPreset.generalSettings.KSCUpgradeTimes, LocalCache.str_KSCUpgradeTimes, HighLogic.Skin.button); // "KSC Upgrade Times"
+            WorkingPreset.generalSettings.TechUpgrades = GUILayout.Toggle(WorkingPreset.generalSettings.TechUpgrades, LocalCache.str_TechUpgrades, HighLogic.Skin.button); // "Upgrades From Tech Tree"
+            WorkingPreset.generalSettings.SharedUpgradePool = GUILayout.Toggle(WorkingPreset.generalSettings.SharedUpgradePool, LocalCache.str_SharedUpgradePool, HighLogic.Skin.button); // "Shared Upgrade Pool (KSCSwitcher)"
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Starting Upgrades:");
+            GUILayout.Label(LocalCache.str_StartingUpgrades); // "Starting Upgrades:"
             WorkingPreset.generalSettings.StartingPoints = GUILayout.TextField(WorkingPreset.generalSettings.StartingPoints, GUILayout.Width(100));
             GUILayout.EndHorizontal();
             GUILayout.EndVertical();
@@ -110,53 +111,53 @@ namespace KerbalConstructionTime
 
 
             GUILayout.BeginVertical(); //Begin time settings
-            GUILayout.Label("Time Settings", yellowText);
+            GUILayout.Label(LocalCache.str_TimeSettings, yellowText); // "Time Settings"
             GUILayout.BeginVertical(HighLogic.Skin.textArea);
             GUILayout.BeginHorizontal();
             GUILayout.BeginVertical();
-            GUILayout.Label("Overall Multiplier: ");
+            GUILayout.Label(LocalCache.str_OverallMultiplier); // "Overall Multiplier: "
             double.TryParse(OMultTmp = GUILayout.TextField(OMultTmp, 10, GUILayout.Width(80)), out WorkingPreset.timeSettings.OverallMultiplier);
-            GUILayout.Label("Merging Time Percent: ");
+            GUILayout.Label(LocalCache.str_MergingTimePercent); // "Merging Time Percent: "
             double.TryParse(MTimePTmp = GUILayout.TextField(MTimePTmp, 10, GUILayout.Width(80)), out WorkingPreset.timeSettings.MergingTimePercent);
             GUILayout.EndVertical();
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Build Effect: ");
+            GUILayout.Label(LocalCache.str_BuildEffect); // "Build Effect: "
             double.TryParse(BEffTmp = GUILayout.TextField(BEffTmp, 10, GUILayout.Width(80)), out WorkingPreset.timeSettings.BuildEffect);
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Inventory Effect: ");
+            GUILayout.Label(LocalCache.str_InventoryEffect); // "Inventory Effect: "
             double.TryParse(IEffTmp = GUILayout.TextField(IEffTmp, 10, GUILayout.Width(80)), out WorkingPreset.timeSettings.InventoryEffect);
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Reconditioning Effect: ");
+            GUILayout.Label(LocalCache.str_ReconditioningEffect); // "Reconditioning Effect: "
             double.TryParse(ReEffTmp = GUILayout.TextField(ReEffTmp, 10, GUILayout.Width(80)), out WorkingPreset.timeSettings.ReconditioningEffect);
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Max Reconditioning: ");
+            GUILayout.Label(LocalCache.str_MaxReconditioning); // "Max Reconditioning: "
             double.TryParse(MaxReTmp = GUILayout.TextField(MaxReTmp, 10, GUILayout.Width(80)), out WorkingPreset.timeSettings.MaxReconditioning);
             GUILayout.EndHorizontal();
-            GUILayout.Label("Rollout-Reconditioning Split:");
+            GUILayout.Label(LocalCache.str_RolloutReconditioningSplit); // "Rollout-Reconditioning Split:"
             GUILayout.BeginHorizontal();
             //GUILayout.Label("Rollout", GUILayout.ExpandWidth(false));
             WorkingPreset.timeSettings.RolloutReconSplit = GUILayout.HorizontalSlider((float)Math.Floor(WorkingPreset.timeSettings.RolloutReconSplit * 100f), 0, 100)/100.0;
             //GUILayout.Label("Recon.", GUILayout.ExpandWidth(false));
             GUILayout.EndHorizontal();
-            GUILayout.Label((Math.Floor(WorkingPreset.timeSettings.RolloutReconSplit*100))+"% Rollout, "+(100-Math.Floor(WorkingPreset.timeSettings.RolloutReconSplit*100))+"% Reconditioning");
+            GUILayout.Label(Localizer.Format("#KCT_Section_TimeSettings_RolloutReconditioningSplit_result",Math.Floor(WorkingPreset.timeSettings.RolloutReconSplit*100), 100-Math.Floor(WorkingPreset.timeSettings.RolloutReconSplit*100))); // (Math.Floor(WorkingPreset.timeSettings.RolloutReconSplit*100))+"% Rollout, "+(100-Math.Floor(WorkingPreset.timeSettings.RolloutReconSplit*100))+"% Reconditioning"
             GUILayout.EndVertical(); //end time settings
             GUILayout.EndVertical();
             GUILayout.EndHorizontal(); //end feature/time setting split
 
             //begin formula settings
             GUILayout.BeginVertical();
-            GUILayout.Label("Formula Settings (Advanced)", yellowText);
+            GUILayout.Label(LocalCache.str_AdvFormulaSettings, yellowText); // "Formula Settings (Advanced)"
             GUILayout.BeginVertical(HighLogic.Skin.textArea);
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Show/Hide Formulas"))
+            if (GUILayout.Button(LocalCache.btn_ShowFormulas)) // "Show/Hide Formulas"
             {
                 showFormula = !showFormula;
             }
-            if (GUILayout.Button("View Wiki in Browser"))
+            if (GUILayout.Button(LocalCache.btn_ViewWiki)) // "View Wiki in Browser"
             {
                 Application.OpenURL("https://github.com/linuxgurugamer/KCT/wiki");
             }
@@ -274,7 +275,7 @@ namespace KerbalConstructionTime
 
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
-            if (GUILayout.Button("Save", GUILayout.ExpandWidth(false)))
+            if (GUILayout.Button(LocalCache.Btn_Save, GUILayout.ExpandWidth(false))) // "Save"
             {
                 KCT_PresetManager.Instance.ActivePreset = WorkingPreset;
                 KCT_PresetManager.Instance.SaveActiveToSaveData();
@@ -320,7 +321,7 @@ namespace KerbalConstructionTime
                 }
                 KCT_GUI.ResetFormulaRateHolders();
             }
-            if (GUILayout.Button("Cancel", GUILayout.ExpandWidth(false)))
+            if (GUILayout.Button(LocalCache.Btn_Cancel, GUILayout.ExpandWidth(false))) // "Cancel"
             {
                 WorkingPreset = null;
                 showSettings = false;
@@ -346,10 +347,10 @@ namespace KerbalConstructionTime
             GUILayout.EndVertical(); //end column 2
 
             GUILayout.BeginVertical(GUILayout.Width(100)); //Start general settings
-            GUILayout.Label("General Settings", yellowText);
-            GUILayout.Label("NOTE: Affects all saves!", yellowText);
+            GUILayout.Label(LocalCache.str_GeneralSettings, yellowText); // "General Settings"
+            GUILayout.Label(LocalCache.str_NOTE, yellowText); // "NOTE: Affects all saves!"
             GUILayout.BeginVertical(HighLogic.Skin.textArea);
-            GUILayout.Label("Max Timewarp");
+            GUILayout.Label(LocalCache.str_MaxTimewarp); // "Max Timewarp"
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("-", GUILayout.ExpandWidth(false)))
             {
@@ -363,12 +364,12 @@ namespace KerbalConstructionTime
             }
             GUILayout.EndHorizontal();
 
-            forceStopWarp = GUILayout.Toggle(forceStopWarp, "Auto Stop TimeWarp", HighLogic.Skin.button);
-            autoAlarms = GUILayout.Toggle(autoAlarms, "Auto KAC Alarms", HighLogic.Skin.button);
-            autoStockAlarms = GUILayout.Toggle(autoStockAlarms, "Auto Stock Alarms", HighLogic.Skin.button);
-            overrideLaunchBtn = GUILayout.Toggle(overrideLaunchBtn, "Override Launch Button", HighLogic.Skin.button);
-            disableAllMsgs = !GUILayout.Toggle(!disableAllMsgs, "Use Message System", HighLogic.Skin.button);
-            debug = GUILayout.Toggle(debug, "Debug Logging", HighLogic.Skin.button);
+            forceStopWarp = GUILayout.Toggle(forceStopWarp, LocalCache.btn_AutoStopTimeWarp, HighLogic.Skin.button); // "Auto Stop TimeWarp"
+            autoAlarms = GUILayout.Toggle(autoAlarms, LocalCache.btn_AutoKACAlarms, HighLogic.Skin.button); // "Auto KAC Alarms"
+            autoStockAlarms = GUILayout.Toggle(autoStockAlarms, LocalCache.btn_AutoStockAlarms, HighLogic.Skin.button); // "Auto Stock Alarms"
+            overrideLaunchBtn = GUILayout.Toggle(overrideLaunchBtn, LocalCache.btn_OverrideLaunchButton, HighLogic.Skin.button); // "Override Launch Button"
+            disableAllMsgs = !GUILayout.Toggle(!disableAllMsgs, LocalCache.btn_UseMessageSystem, HighLogic.Skin.button); // "Use Message System"
+            debug = GUILayout.Toggle(debug, LocalCache.btn_DebugLogging, HighLogic.Skin.button); // "Debug Logging"
 
 #if DEBUG
             debugUpdateChecking = GUILayout.Toggle(debugUpdateChecking, "Check for Dev Updates", HighLogic.Skin.button);
@@ -415,38 +416,38 @@ namespace KerbalConstructionTime
         {
             GUILayout.BeginVertical();
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Preset name:");
+            GUILayout.Label(LocalCache.str_PresetName); // "Preset name:"
             saveName = GUILayout.TextField(saveName, GUILayout.Width(100));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Preset short name:");
+            GUILayout.Label(LocalCache.str_PresetShortName); //"Preset short name:" 
             saveShort = GUILayout.TextField(saveShort, GUILayout.Width(100));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Preset author(s):");
+            GUILayout.Label(LocalCache.str_PresetAuthors); // "Preset author(s):"
             saveAuthor = GUILayout.TextField(saveAuthor, GUILayout.Width(100));
             GUILayout.EndHorizontal();
 
             //GUILayout.BeginHorizontal();
-            GUILayout.Label("Preset description:");
+            GUILayout.Label(LocalCache.str_PresetDescription); // "Preset description:"
             saveDesc = GUILayout.TextField(saveDesc, GUILayout.Width(220));
             //GUILayout.EndHorizontal();
 
-            saveCareer = GUILayout.Toggle(saveCareer, " Show in Career Games");
-            saveScience = GUILayout.Toggle(saveScience, " Show in Science Games");
-            saveSandbox = GUILayout.Toggle(saveSandbox, " Show in Sandbox Games");
+            saveCareer = GUILayout.Toggle(saveCareer, " " + LocalCache.str_saveCareer); // " Show in Career Games"
+            saveScience = GUILayout.Toggle(saveScience, " " + LocalCache.str_saveScience); // " Show in Science Games"
+            saveSandbox = GUILayout.Toggle(saveSandbox, " " + LocalCache.str_saveSandbox); // " Show in Sandbox Games"
 
             KCT_Preset existing = KCT_PresetManager.Instance.FindPresetByShortName(saveShort);
             bool AlreadyExists = existing != null;
             bool CanOverwrite = AlreadyExists ? existing.AllowDeletion : true;
 
             if (AlreadyExists)
-                GUILayout.Label("Warning: A preset with that short name already exists!");
+                GUILayout.Label(LocalCache.str_existWarning); //"Warning: A preset with that short name already exists!"
 
             GUILayout.BeginHorizontal();
-            if (CanOverwrite && GUILayout.Button("Save"))
+            if (CanOverwrite && GUILayout.Button(LocalCache.Btn_Save)) // "Save"
             {
                 toSave.name = saveName;
                 toSave.shortName = saveShort;
@@ -464,7 +465,7 @@ namespace KerbalConstructionTime
                 KCT_PresetManager.Instance.FindPresetFiles();
                 KCT_PresetManager.Instance.LoadPresets();
             }
-            if (GUILayout.Button("Cancel"))
+            if (GUILayout.Button(LocalCache.Btn_Cancel)) // "Cancel"
             {
                 showPresetSaver = false;
             }

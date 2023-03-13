@@ -38,10 +38,12 @@ namespace KerbalConstructionTime
         void KCT_Recovery()
         {
             DialogGUIBase[] options = new DialogGUIBase[2];
-            options[0] = new DialogGUIButton("Go to Flight scene", Fly);
-            options[1] = new DialogGUIButton("Cancel", Cancel);
+            options[0] = new DialogGUIButton(LocalCache.btn_GotoFlight, Fly); // "Go to Flight scene"
+            options[1] = new DialogGUIButton(LocalCache.Btn_Cancel, Cancel); // "Cancel"
 
-            MultiOptionDialog diag = new MultiOptionDialog("scrapVesselPopup", "KCT can only recover vessels in the Flight scene", "Recover Vessel", null, options: options);
+            MultiOptionDialog diag = new MultiOptionDialog("scrapVesselPopup", 
+                LocalCache.str_Messages_RecoverInFlight, //"KCT can only recover vessels in the Flight scene"
+                LocalCache.str_Messages_RecoverInFlightTitle, null, options: options); // "Recover Vessel"
             PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
 
         }
@@ -112,28 +114,28 @@ namespace KerbalConstructionTime
 
             DialogGUIBase[] options = new DialogGUIBase[cnt];
             cnt = 0;
-            string msg = "Do you want KCT to do the recovery?";
+            string msg = LocalCache.str_Messages_KCTRecover; // "Do you want KCT to do the recovery?"
             if (!selectedVessel.isEVA && !kerbInExtSeat)
             {
                 if (sph)
                 {
-                    options[cnt++] = new DialogGUIButton("Recover to SPH", RecoverToSPH);
+                    options[cnt++] = new DialogGUIButton(LocalCache.btn_RecoverToSPH, RecoverToSPH); // "Recover to SPH"
                 }
                 if (vab)
                 {
-                    options[cnt++] = new DialogGUIButton("Recover to VAB", RecoverToVAB);
+                    options[cnt++] = new DialogGUIButton(LocalCache.btn_RecoverToVAB, RecoverToVAB); // "Recover to VAB"
                 }
-                options[cnt++] = new DialogGUIButton("Normal recovery", DoNormalRecovery);
+                options[cnt++] = new DialogGUIButton(LocalCache.btn_NomalRecover, DoNormalRecovery); // "Normal recovery"
             }
             else
             {
-                msg = "KCT cannot recover if any kerbals are in external seats";
-                options[cnt++] = new DialogGUIButton("Recover", DoNormalRecovery);
+                msg = LocalCache.str_Messages_ExternalSeatReconvery; // "KCT cannot recover if any kerbals are in external seats"
+                options[cnt++] = new DialogGUIButton(LocalCache.btn_Recover, DoNormalRecovery); // "Recover"
             }
 
-            options[cnt] = new DialogGUIButton("Cancel", Cancel);
+            options[cnt] = new DialogGUIButton(LocalCache.Btn_Cancel, Cancel); // "Cancel"
 
-            MultiOptionDialog diag = new MultiOptionDialog("scrapVesselPopup", msg, "Recover Vessel", null, options: options);
+            MultiOptionDialog diag = new MultiOptionDialog("scrapVesselPopup", msg, LocalCache.str_Messages_RecoverInFlightTitle, null, options: options); // "Recover Vessel"
             PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
         }
     }

@@ -463,7 +463,7 @@ namespace KerbalConstructionTime
             {
                 if (FlightGlobals.ActiveVessel == null || FlightGlobals.ActiveVessel.id != vesselId)
                 {
-                    ScreenMessages.PostScreenMessage("[KCT] Airlaunch cancelled", 5f, ScreenMessageStyle.UPPER_CENTER, XKCDColors.Red);
+                    ScreenMessages.PostScreenMessage(LocalCache.str_Messages_AirlaunchCancelled, 5f, ScreenMessageStyle.UPPER_CENTER, XKCDColors.Red); // "[KCT] Airlaunch cancelled"
                     yield break;
                 }
 
@@ -473,7 +473,7 @@ namespace KerbalConstructionTime
                     FlightGlobals.ActiveVessel.situation = Vessel.Situations.LANDED;
                 }
 
-                ScreenMessages.PostScreenMessage($"[KCT] Launching in {i}...", 1f, ScreenMessageStyle.UPPER_CENTER, XKCDColors.Red);
+                ScreenMessages.PostScreenMessage(Localizer.Format("#KCT_Messages_AirlaunchStart", i), 1f, ScreenMessageStyle.UPPER_CENTER, XKCDColors.Red); // $"[KCT] Launching in {i}..."
                 yield return wfsOne;
             }
 

@@ -114,6 +114,7 @@
     <Compile Include="KCT_Utilities.cs" />
     <Compile Include="KCT_WindowHelper.cs" />
     <Compile Include="KerbalConstructionTime.cs" />
+    <Compile Include="LocalizationCache.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScrapYardWrapper.cs" />
     <Compile Include="StageRecoveryWrapper.cs" />

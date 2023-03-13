@@ -6,6 +6,7 @@ using System.Text;
 using UnityEngine;
 using KSP.UI.Screens;
 using ToolbarControl_NS;
+using KSP.Localization;
 
 namespace KerbalConstructionTime
 {
@@ -115,18 +116,18 @@ namespace KerbalConstructionTime
             {
                 if (EditorLogic.fetch.ship != null && EditorLogic.fetch.ship.Parts != null && EditorLogic.fetch.ship.Parts.Count > 0)
                 {
-                    if (EditorLogic.fetch.ship.shipName == "Untitled Space Craft" || EditorLogic.fetch.ship.shipName == "")
+                    if (EditorLogic.fetch.ship.shipName == Localizer.Format("#autoLOC_900530") || EditorLogic.fetch.ship.shipName == "") // "Untitled Space Craft"
                     {
                         
-                        if (GUILayout.Button("Cannot Add a Plan Without a Valid Name", GUILayout.Height(2 * 22)))
+                        if (GUILayout.Button(LocalCache.str_BuildingPlansAndConstruction_CannotAddPlan, GUILayout.Height(2 * 22))) // "Cannot Add a Plan Without a Valid Name"
                         {
-                            if (EditorLogic.fetch.ship.shipName == "Untitled Space Craft")
+                            if (EditorLogic.fetch.ship.shipName == Localizer.Format("#autoLOC_900530")) // "Untitled Space Craft"
                             {
-                                var message = new ScreenMessage("[KCT] Vessel must have a name other than 'Untitled Space Craft'.", 4.0f, ScreenMessageStyle.UPPER_CENTER);
+                                var message = new ScreenMessage(LocalCache.str_BuildingPlansAndConstruction_CannotAddPlan_Msg1, 4.0f, ScreenMessageStyle.UPPER_CENTER); // "[KCT] Vessel must have a name other than 'Untitled Space Craft'."
                                 ScreenMessages.PostScreenMessage(message);
                             } else
                             {
-                                var message = new ScreenMessage("[KCT] Vessel must have a name", 4.0f, ScreenMessageStyle.UPPER_CENTER);
+                                var message = new ScreenMessage(LocalCache.str_BuildingPlansAndConstruction_CannotAddPlan_Msg2, 4.0f, ScreenMessageStyle.UPPER_CENTER); // "[KCT] Vessel must have a name"
                                 ScreenMessages.PostScreenMessage(message);
                             }
                         }
@@ -135,7 +136,7 @@ namespace KerbalConstructionTime
                     else
                     {
                         GUILayout.BeginHorizontal();
-                        if (GUILayout.Button("Add To Building Plans", GUILayout.Height(2 * 22)))
+                        if (GUILayout.Button(LocalCache.btn_BuildingPlansAndConstruction_AddToPlans, GUILayout.Height(2 * 22))) // "Add To Building Plans"
                         {
                             AddVesselToPlansList();
                         }
@@ -143,7 +144,7 @@ namespace KerbalConstructionTime
                         //if (!KCT_GameStates.settings.OverrideLaunchButton)
                         {
                             GUILayout.BeginHorizontal();
-                            if (GUILayout.Button("Build", GUILayout.Height(2 * 22)))
+                            if (GUILayout.Button(LocalCache.btn_BuildingPlansAndConstruction_Build, GUILayout.Height(2 * 22))) // "Build"
                             {
                                 KCT_Utilities.AddVesselToBuildList();
                                 //SwitchCurrentPartCategory();
@@ -155,18 +156,18 @@ namespace KerbalConstructionTime
                 }
                 else
                 {
-                    GUILayout.Button("No vessel available", GUILayout.Height(2 * 22));
+                    GUILayout.Button(LocalCache.btn_BuildingPlansAndConstruction_NoAvailable, GUILayout.Height(2 * 22)); // "No vessel available"
                 }
             }
             GUILayout.Space(10);
             GUILayout.BeginHorizontal();            
             GUILayout.FlexibleSpace();
-            GUILayout.Label("Available Building Plans");
+            GUILayout.Label(LocalCache.str_BuildingPlansAndConstruction_AvailableBuildingPlans); // "Available Building Plans"
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
-            bool VABSelectedNew = GUILayout.Toggle(VABSelected, "VAB", GUI.skin.button);
-            bool SPHSelectedNew = GUILayout.Toggle(SPHSelected, "SPH", GUI.skin.button);
+            bool VABSelectedNew = GUILayout.Toggle(VABSelected, LocalCache.Btn_VAB, GUI.skin.button); //"VAB"
+            bool SPHSelectedNew = GUILayout.Toggle(SPHSelected, LocalCache.Btn_SPH, GUI.skin.button); // "SPH"
 
             if (VABSelectedNew != VABSelected)
                 SelectList("VAB");
@@ -188,13 +189,13 @@ namespace KerbalConstructionTime
                 {
                     GUILayout.BeginHorizontal();
                     //  GUILayout.Space((butW + 4) * 3);
-                    GUILayout.Label("Name:");
+                    GUILayout.Label(LocalCache.str_BuildList_Name); // "Name:"
                     GUILayout.EndHorizontal();
                     buildPlanScrollPos = GUILayout.BeginScrollView(buildPlanScrollPos, GUILayout.Height(250));
 
                     if (plansList.Count == 0)
                     {
-                        GUILayout.Label("No vessels in plans.");
+                        GUILayout.Label(LocalCache.str_BuildingPlansAndConstruction_NoVesselsInPlans); // "No vessels in plans."
                     }
                     for (int i = 0; i < plansList.Count; i++)
                     {
@@ -209,9 +210,11 @@ namespace KerbalConstructionTime
                                 InputLockManager.SetControlLock(ControlTypes.EDITOR_SOFT_LOCK, "KCTPopupLock");
                                 IDSelected = b.id;
                                 DialogGUIBase[] options = new DialogGUIBase[2];
-                                options[0] = new DialogGUIButton("Yes", RemoveVesselFromPlans);
-                                options[1] = new DialogGUIButton("No", DummyVoid);
-                                MultiOptionDialog diag = new MultiOptionDialog("scrapVesselPopup", "Are you sure you want to remove this vessel from the plans?", "Delete plan", null, options: options);
+                                options[0] = new DialogGUIButton(LocalCache.Btn_Yes, RemoveVesselFromPlans); // "Yes"
+                                options[1] = new DialogGUIButton(LocalCache.Btn_No, DummyVoid); // "No"
+                                MultiOptionDialog diag = new MultiOptionDialog("scrapVesselPopup", 
+                                    LocalCache.str_BuildingPlansAndConstruction_RemovePlanMsg, //"Are you sure you want to remove this vessel from the plans?"
+                                    LocalCache.str_BuildingPlansAndConstruction_RemovePlanTitle, null, options: options); //"Delete plan"
                                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
                             }
        
@@ -226,7 +229,7 @@ namespace KerbalConstructionTime
                     GUILayout.EndScrollView();
                 }
                 GUILayout.FlexibleSpace();
-                if (GUILayout.Button("Close"))
+                if (GUILayout.Button(LocalCache.Btn_Close)) // "Close"
                 {
                     showBuildPlansWindow = false;
                 }
@@ -265,9 +268,11 @@ namespace KerbalConstructionTime
                 List<string> facilityChecks = blv.MeetsFacilityRequirements(true);
                 if (facilityChecks.Count != 0)
                 {
-                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "editorChecksFailedPopup", "Failed editor checks!",
-                        "Warning! This vessel did not pass the editor checks! It will still be added to the plans, but you will not be able to launch it without upgrading. Listed below are the failed checks:\n"
-                        + string.Join("\n", facilityChecks.ToArray()), "Acknowledged", false, HighLogic.UISkin);
+                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "editorChecksFailedPopup", 
+                        LocalCache.str_Messages_FailedEditorChecksTitle, // "Failed editor checks!"
+                         LocalCache.str_Messages_FailedEditorChecksMsg2// "Warning! This vessel did not pass the editor checks! It will still be added to the plans, but you will not be able to launch it without upgrading. Listed below are the failed checks:\n"
+                        + string.Join("\n", facilityChecks.ToArray()), 
+                        LocalCache.Btn_Acknowledged, false, HighLogic.UISkin); // "Acknowledged"
                 }
             }
             string type = "";
@@ -276,7 +281,7 @@ namespace KerbalConstructionTime
                 if (KCT_GameStates.ActiveKSC.VABPlans.ContainsKey(blv.shipName))
                 {
                     KCT_GameStates.ActiveKSC.VABPlans.Remove(blv.shipName);
-                    message = new ScreenMessage("[KCT] Replacing previous plan for " + blv.shipName +" in the VAB Building Plans list.", 4.0f, ScreenMessageStyle.UPPER_CENTER);
+                    message = new ScreenMessage(Localizer.Format("#KCT_Messages_ReplacingPrevVABPlan", blv.shipName), 4.0f, ScreenMessageStyle.UPPER_CENTER); // "[KCT] Replacing previous plan for " + blv.shipName +" in the VAB Building Plans list."
                     ScreenMessages.PostScreenMessage(message);
                 }
                 KCT_GameStates.ActiveKSC.VABPlans.Add(blv.shipName, blv);
@@ -287,7 +292,7 @@ namespace KerbalConstructionTime
                 if (KCT_GameStates.ActiveKSC.SPHPlans.ContainsKey(blv.shipName))
                 {
                     KCT_GameStates.ActiveKSC.SPHPlans.Remove(blv.shipName);
-                    message = new ScreenMessage("[KCT] Replacing previous plan for " + blv.shipName + " in the SPH Building Plans list.", 4.0f, ScreenMessageStyle.UPPER_CENTER);
+                    message = new ScreenMessage(Localizer.Format("#KCT_Messages_ReplacingPrevSPHPla", blv.shipName), 4.0f, ScreenMessageStyle.UPPER_CENTER); // "[KCT] Replacing previous plan for " + blv.shipName + " in the SPH Building Plans list."
                     ScreenMessages.PostScreenMessage(message);
                 }
                     KCT_GameStates.ActiveKSC.SPHPlans.Add(blv.shipName, blv);
@@ -299,7 +304,7 @@ namespace KerbalConstructionTime
             KCTDebug.Log("Added " + blv.shipName + " to " + type + " build list at KSC " + KCT_GameStates.ActiveKSC.KSCName + ". Cost: " + blv.cost);
             KCTDebug.Log("Launch site is " + blv.launchSite);
             //KCTDebug.Log("Cost Breakdown (total, parts, fuel): " + blv.totalCost + ", " + blv.dryCost + ", " + blv.fuelCost);
-            message = new ScreenMessage("[KCT] Added " + blv.shipName + " to " + type + " build list.", 4.0f, ScreenMessageStyle.UPPER_CENTER);
+            message = new ScreenMessage(Localizer.Format("#KCT_Messages_AShipToPlan", blv.shipName, type), 4.0f, ScreenMessageStyle.UPPER_CENTER); // "[KCT] Added " + blv.shipName + " to " + type + " build list."
             ScreenMessages.PostScreenMessage(message);
             return blv;
         }
