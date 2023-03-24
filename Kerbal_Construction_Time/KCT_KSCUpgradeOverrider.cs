@@ -51,7 +51,7 @@ namespace KerbalConstructionTime
                         var hov = button.gameObject.GetComponent<UIOnHover>();
                         hov.gameObject.DestroyGameObject();
 
-                        _menu.levelStatsText.text = "<color=red><b>Launchpads cannot be upgraded. Build a new launchpad from the KCT menu instead.</b></color>";
+                        _menu.levelStatsText.text = $"<color=red><b>{LocalCache.str_Messages_CanotUpgradeLaunchpadecoverInFlight}</b></color>"; //Launchpads cannot be upgraded. Build a new launchpad from the KCT menu instead. 
                     }
                 }
                 else
@@ -149,8 +149,8 @@ namespace KerbalConstructionTime
                 if (ResearchAndDevelopment.GetTechnologyState(gate) != RDTech.State.Available)
                 {
                     PopupDialog.SpawnPopupDialog(new MultiOptionDialog("kctUpgradePadConfirm",
-                            "Can't upgrade this facility. Requires " + KerbalConstructionTimeData.techNameToTitle[gate] + ".",
-                            "Lack Tech to Upgrade",
+                            LocalCache.str_Messages_UpgradeRequireTechMsg, // "Can't upgrade this facility. Requires " + KerbalConstructionTimeData.techNameToTitle[gate] + "."
+                            LocalCache.str_Messages_UpgradeRequireTech_Title, // "Lack Tech to Upgrade"
                             HighLogic.UISkin,
                             new DialogGUIButton("Ok", stub)),
                             false,
@@ -190,18 +190,18 @@ namespace KerbalConstructionTime
                         Debug.LogException(ex);
                     }
 
-                    ScreenMessages.PostScreenMessage("Facility upgrade requested!", 4.0f, ScreenMessageStyle.UPPER_CENTER);
+                    ScreenMessages.PostScreenMessage(LocalCache.str_Messages_UpgraderequestedFacility, 4.0f, ScreenMessageStyle.UPPER_CENTER); // "Facility upgrade requested!"
                     KCTDebug.Log($"Facility {facilityID} upgrade requested to lvl {oldLevel + 1} for {cost} funds, resulting in a BP of {upgrading.BP}");
                 }
                 else
                 {
                     KCTDebug.Log("Couldn't afford to upgrade.");
-                    ScreenMessages.PostScreenMessage("Not enough funds to upgrade facility!", 4.0f, ScreenMessageStyle.UPPER_CENTER);
+                    ScreenMessages.PostScreenMessage(LocalCache.str_Messages_NoFundsUpgradeFacility, 4.0f, ScreenMessageStyle.UPPER_CENTER); // "Not enough funds to upgrade facility!"
                 }
             }
             else if (oldLevel + 1 != upgrading.currentLevel)
             {
-                ScreenMessages.PostScreenMessage("Facility is already being upgraded!", 4.0f, ScreenMessageStyle.UPPER_CENTER);
+                ScreenMessages.PostScreenMessage(LocalCache.str_Messages_FacilityAlreadyUpgraded, 4.0f, ScreenMessageStyle.UPPER_CENTER); // "Facility is already being upgraded!"
                 KCTDebug.Log($"Facility {facilityID} tried to upgrade to lvl {oldLevel + 1} but already in list!");
             }
         }
@@ -213,11 +213,11 @@ namespace KerbalConstructionTime
             if (GetFacilityID().ToLower().Contains("launchpad"))
             {
                 PopupDialog.SpawnPopupDialog(new MultiOptionDialog("kctUpgradePadConfirm",
-                            "Upgrading this launchpad will render it unusable until the upgrade finishes.\n\nAre you sure you want to?",
-                            "Upgrade Launchpad?",
+                            LocalCache.str_Messages_LaunchpadUpgradetip, // "Upgrading this launchpad will render it unusable until the upgrade finishes.\n\nAre you sure you want to?"
+                            LocalCache.str_Messages_LaunchpadUpgrade_title, // "Upgrade Launchpad?"
                             HighLogic.UISkin,
-                            new DialogGUIButton("Yes", ProcessUpgrade),
-                            new DialogGUIButton("No", stub)),
+                            new DialogGUIButton(LocalCache.Btn_Yes, ProcessUpgrade), // "Yes"
+                            new DialogGUIButton(LocalCache.Btn_No, stub)), // "No"
                             false,
                             HighLogic.UISkin);
             }

@@ -30,7 +30,10 @@ namespace KerbalConstructionTime
         {
             if (!KCT_Utilities.RecoverActiveVesselToStorage(KCT_BuildListVessel.ListType.VAB))
             {
-                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "vesselRecoverErrorPopup", "Error!", "There was an error while recovering the ship. Sometimes reloading the scene and trying again works. Sometimes a vessel just can't be recovered this way and you must use the stock recover system.", "OK", false, HighLogic.UISkin);
+                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "vesselRecoverErrorPopup", 
+                    LocalCache.str_RecoverError_title,  // "Error!"
+                    LocalCache.str_RecoverErrorMsg, // "There was an error while recovering the ship. Sometimes reloading the scene and trying again works. Sometimes a vessel just can't be recovered this way and you must use the stock recover system."
+                    "OK", false, HighLogic.UISkin);
             }
         }
 
@@ -38,7 +41,10 @@ namespace KerbalConstructionTime
         {
             if (!KCT_Utilities.RecoverActiveVesselToStorage(KCT_BuildListVessel.ListType.SPH))
             {
-                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "recoverShipErrorPopup", "Error!", "There was an error while recovering the ship. Sometimes reloading the scene and trying again works. Sometimes a vessel just can't be recovered this way and you must use the stock recover system.", "OK", false, HighLogic.UISkin);
+                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "recoverShipErrorPopup", 
+                    LocalCache.str_RecoverError_title, // "Error!"
+                    LocalCache.str_RecoverErrorMsg,  // "There was an error while recovering the ship. Sometimes reloading the scene and trying again works. Sometimes a vessel just can't be recovered this way and you must use the stock recover system."
+                    "OK", false, HighLogic.UISkin);
             }
         }
 
@@ -66,7 +72,7 @@ namespace KerbalConstructionTime
             }
             DialogGUIBase[] options = new DialogGUIBase[cnt];
             cnt = 0;
-            string msg = "Do you want KCT to do the recovery?";
+            string msg = LocalCache.str_Messages_KCTRecover; // "Do you want KCT to do the recovery?"
 
             if (!FlightGlobals.ActiveVessel.isEVA)
             {
@@ -74,26 +80,26 @@ namespace KerbalConstructionTime
                 {
                     if (sph)
                     {
-                        options[cnt++] = new DialogGUIButton("Recover to SPH", RecoverToSPH);
+                        options[cnt++] = new DialogGUIButton(LocalCache.btn_RecoverToSPH, RecoverToSPH); // "Recover to SPH"
                     }
                     if (vab)
                     {
-                        options[cnt++] = new DialogGUIButton("Recover to VAB", RecoverToVAB);
+                        options[cnt++] = new DialogGUIButton(LocalCache.btn_RecoverToVAB, RecoverToVAB); // "Recover to VAB"
                     }
                 } 
                 else
                 {
-                    msg = "KCT cannot recover if any kerbals are in external seats";
+                    msg = LocalCache.str_Messages_ExternalSeatReconvery; // "KCT cannot recover if any kerbals are in external seats"
                 }
-                options[cnt++] = new DialogGUIButton("Normal recovery", DoNormalRecovery);
+                options[cnt++] = new DialogGUIButton(LocalCache.btn_NomalRecover, DoNormalRecovery); // "Normal recovery"
             } 
             else
-                options[cnt++] = new DialogGUIButton("Recover", DoNormalRecovery);
-            options[cnt] = new DialogGUIButton("Cancel", Cancel);
+                options[cnt++] = new DialogGUIButton(LocalCache.btn_Recover, DoNormalRecovery); // "Recover"
+            options[cnt] = new DialogGUIButton(LocalCache.Btn_Cancel, Cancel); // "Cancel"
 
             MultiOptionDialog diag = new MultiOptionDialog("scrapVesselPopup", 
                 msg, 
-                "Kerbal Construction Time (KCT)", 
+                LocalCache.str_Messages_Title, //"Kerbal Construction Time (KCT)"
                 null, options: options);
             PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
         }

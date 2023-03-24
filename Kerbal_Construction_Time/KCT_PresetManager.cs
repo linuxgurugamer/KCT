@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using KSP.Localization;
 
 namespace KerbalConstructionTime
 {
@@ -58,7 +59,7 @@ namespace KerbalConstructionTime
             List<string> names = new List<string>();
             foreach (KCT_Preset preset in Presets)
             {
-                names.Add(preset.shortName);
+                names.Add(Localizer.Format(preset.shortName));
             }
             if (IncludeCustom)
                 names.Add("Custom");

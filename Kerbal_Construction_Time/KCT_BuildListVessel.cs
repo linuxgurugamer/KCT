@@ -5,6 +5,7 @@ using System.Linq;
 using KSP.UI;
 using PreFlightTests;
 using UnityEngine;
+using KSP.Localization;
 
 namespace KerbalConstructionTime
 {
@@ -624,16 +625,16 @@ namespace KerbalConstructionTime
                 double totalMass = GetTotalMass();
                 if (totalMass > GameVariables.Instance.GetCraftMassLimit(launchpadNormalizedLevel, true))
                 {
-                    failedReasons.Add($"Mass limit exceeded, currently at {totalMass:N} tons");
+                    failedReasons.Add(Localizer.Format("#KCT_Messages_FailedReasons_MassExceeded", totalMass.ToString("N"))); // $"Mass limit exceeded, currently at {totalMass:N} tons"
                 }
                 if (this.ExtractedPartNodes.Count > GameVariables.Instance.GetPartCountLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.VehicleAssemblyBuilding), true))
                 {
-                    failedReasons.Add("Part Count limit exceeded");
+                    failedReasons.Add(LocalCache.str_Messages_FailedReasons_PartExceeded); // "Part Count limit exceeded"
                 }
                 CraftWithinSizeLimits sizeCheck = new CraftWithinSizeLimits(template, SpaceCenterFacility.LaunchPad, GameVariables.Instance.GetCraftSizeLimit(launchpadNormalizedLevel, true));
                 if (!sizeCheck.Test())
                 {
-                    failedReasons.Add("Size limits exceeded");
+                    failedReasons.Add(LocalCache.str_Messages_FailedReasons_SizeExceeded); // "Size limits exceeded"
                 }
             }
             else if (this.type == ListType.SPH)
@@ -641,16 +642,16 @@ namespace KerbalConstructionTime
                 double totalMass = GetTotalMass();
                 if (totalMass > GameVariables.Instance.GetCraftMassLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.Runway), false))
                 {
-                    failedReasons.Add($"Mass limit exceeded, currently at {totalMass:N} tons");
+                    failedReasons.Add(Localizer.Format("#KCT_Messages_FailedReasons_MassExceeded", totalMass.ToString("N"))); // $"Mass limit exceeded, currently at {totalMass:N} tons"
                 }
                 if (this.ExtractedPartNodes.Count > GameVariables.Instance.GetPartCountLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.SpaceplaneHangar), false))
                 {
-                    failedReasons.Add("Part Count limit exceeded");
+                    failedReasons.Add(LocalCache.str_Messages_FailedReasons_PartExceeded); // "Part Count limit exceeded"
                 }
                 CraftWithinSizeLimits sizeCheck = new CraftWithinSizeLimits(template, SpaceCenterFacility.Runway, GameVariables.Instance.GetCraftSizeLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.Runway), false));
                 if (!sizeCheck.Test())
                 {
-                    failedReasons.Add("Size limits exceeded");
+                    failedReasons.Add(LocalCache.str_Messages_FailedReasons_SizeExceeded); // "Size limits exceeded"
                 }
             }
 

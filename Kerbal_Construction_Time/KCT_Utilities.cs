@@ -8,6 +8,7 @@ using KSP.UI;
 using KSP.UI.Screens;
 using UnityEngine;
 using ToolbarControl_NS;
+using KSP.Localization;
 
 namespace KerbalConstructionTime
 {
@@ -690,7 +691,7 @@ namespace KerbalConstructionTime
             {
                 //ResearchAndDevelopment.Instance.Science += science;
                 ResearchAndDevelopment.Instance.AddScience(science, reason);
-                var message = new ScreenMessage("[KCT] " + science + " science added.", 4.0f, ScreenMessageStyle.UPPER_LEFT);
+                var message = new ScreenMessage(Localizer.Format("#KCT_Messages_AddScience", science), 4.0f, ScreenMessageStyle.UPPER_LEFT); // "[KCT] " + science + " science added."
                 ScreenMessages.PostScreenMessage(message);
                 return message.ToString();
             }
@@ -716,7 +717,7 @@ namespace KerbalConstructionTime
             startedFlashing = DateTime.Now; //Set the time to start flashing
 
             StringBuilder Message = new StringBuilder();
-            Message.AppendLine("The following vessel is complete:");
+            Message.AppendLine(LocalCache.str_Messages_CompleteStart); // "The following vessel is complete:"
             KCT_BuildListVessel vessel = null;
             if (ListIdentifier == KCT_BuildListVessel.ListType.VAB)
             {
@@ -725,7 +726,7 @@ namespace KerbalConstructionTime
                 KSC.VABWarehouse.Add(vessel);
                 
                 Message.AppendLine(vessel.shipName);
-                Message.AppendLine("Please check the VAB Storage at "+KSC.KSCName+" to launch it.");
+                Message.AppendLine(Localizer.Format("#KCT_Messages_Complete_VABcheck", KSC.KSCName)); // "Please check the VAB Storage at "+KSC.KSCName+" to launch it."
             
             }
             else if (ListIdentifier == KCT_BuildListVessel.ListType.SPH)
@@ -735,7 +736,7 @@ namespace KerbalConstructionTime
                 KSC.SPHWarehouse.Add(vessel);
 
                 Message.AppendLine(vessel.shipName);
-                Message.AppendLine("Please check the SPH Storage at " + KSC.KSCName + " to launch it.");
+                Message.AppendLine(Localizer.Format("#KCT_Messages_Complete_SPHcheck", KSC.KSCName )); // "Please check the SPH Storage at " + KSC.KSCName + " to launch it."
             }
 
             if ((KCT_GameStates.settings.ForceStopWarp || vessel == KCT_GameStates.targetedItem) && TimeWarp.CurrentRateIndex != 0)
@@ -787,7 +788,7 @@ namespace KerbalConstructionTime
             KCT_GUI.ResetBLWindow(false);
             if (!KCT_GameStates.settings.DisableAllMessages)
             {
-                DisplayMessage("Vessel Complete!", Message, MessageSystemButton.MessageButtonColor.GREEN, MessageSystemButton.ButtonIcons.COMPLETE);
+                DisplayMessage(LocalCache.str_Messages_CompleteTitle, Message, MessageSystemButton.MessageButtonColor.GREEN, MessageSystemButton.ButtonIcons.COMPLETE); // "Vessel Complete!"
             }
         }
 
@@ -837,7 +838,7 @@ namespace KerbalConstructionTime
                 // now done in TotalUpgradePoints
                 //KCT_GameStates.PurchasedUpgrades[1] += upgradesToAdd;
                 KCTDebug.Log($"Added {upgradesToAdd} upgrade points");
-                ScreenMessages.PostScreenMessage($"{upgradesToAdd} KCT Upgrade Point{(upgradesToAdd > 1 ? "s" : string.Empty)} Added!", 8.0f, ScreenMessageStyle.UPPER_LEFT);
+                ScreenMessages.PostScreenMessage(Localizer.Format("#KCT_Messages_AddUpgradePoint", upgradesToAdd), 8.0f, ScreenMessageStyle.UPPER_LEFT); //$"{upgradesToAdd} KCT Upgrade Point{(upgradesToAdd > 1 ? "s" : string.Empty)} Added!" 
             }
         }
 
@@ -915,9 +916,10 @@ namespace KerbalConstructionTime
                 List<string> facilityChecks = blv.MeetsFacilityRequirements(true);
                 if (facilityChecks.Count != 0)
                 {
-                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "editorChecksFailedPopup", "Failed editor checks!",
-                        "Warning! This vessel did not pass the editor checks! It will still be built, but you will not be able to launch it without upgrading. Listed below are the failed checks:\n" 
-                        + string.Join("\n", facilityChecks.Select(s => $"• {s}").ToArray()), "Acknowledged", false, HighLogic.UISkin);
+                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "editorChecksFailedPopup", 
+                        LocalCache.str_Messages_FailedEditorChecksTitle, // "Failed editor checks!"
+                        LocalCache.str_Messages_FailedEditorChecksMsg + string.Join("\n", facilityChecks.Select(s => $"• {s}").ToArray()), // "Warning! This vessel did not pass the editor checks! It will still be built, but you will not be able to launch it without upgrading. Listed below are the failed checks:\n"
+                        LocalCache.Btn_Acknowledged, false, HighLogic.UISkin);// "Acknowledged"
                 }
 
 
@@ -927,7 +929,7 @@ namespace KerbalConstructionTime
                 {
                     KCTDebug.Log("Tried to add " + blv.shipName + " to build list but not enough funds.");
                     KCTDebug.Log("Vessel cost: " + GetTotalVesselCost(blv.shipNode) + ", Current funds: " + prevFunds);
-                    var msg = new ScreenMessage("Not Enough Funds To Build!", 4.0f, ScreenMessageStyle.UPPER_CENTER);
+                    var msg = new ScreenMessage(LocalCache.str_Messages_NotEnoughFundsBuild, 4.0f, ScreenMessageStyle.UPPER_CENTER); // "Not Enough Funds To Build!"
                     ScreenMessages.PostScreenMessage(msg);
                     return null;
                 }
@@ -942,13 +944,13 @@ namespace KerbalConstructionTime
             {
                 blv.launchSite = "LaunchPad";
                 KCT_GameStates.ActiveKSC.VABList.Add(blv);
-                type = "VAB";
+                type = LocalCache.str_locTxtVAB; // "VAB"
             }
             else if (blv.type == KCT_BuildListVessel.ListType.SPH)
             {
                 blv.launchSite = "Runway";
                 KCT_GameStates.ActiveKSC.SPHList.Add(blv);
-                type = "SPH";
+                type = LocalCache.str_locTxtSPH; // "SPH"
             }
 
             ScrapYardWrapper.ProcessVessel(blv.ExtractedPartNodes);
@@ -956,7 +958,7 @@ namespace KerbalConstructionTime
             KCTDebug.Log($"Added {blv.shipName} to {type} build list at KSC {KCT_GameStates.ActiveKSC.KSCName}. Cost: {blv.cost}. IntegrationCost: {blv.integrationCost}");
             KCTDebug.Log("Launch site is " + blv.launchSite);
             //KCTDebug.Log("Cost Breakdown (total, parts, fuel): " + blv.totalCost + ", " + blv.dryCost + ", " + blv.fuelCost);
-            var message = new ScreenMessage($"[KCT] Added {blv.shipName} to {type} build list.", 4.0f, ScreenMessageStyle.UPPER_CENTER);
+            var message = new ScreenMessage(Localizer.Format("#KCT_Messages_AddToBuildList", blv.shipName, type), 4.0f, ScreenMessageStyle.UPPER_CENTER); // $"[KCT] Added {blv.shipName} to {type} build list."
             ScreenMessages.PostScreenMessage(message);
             return blv;
         }
@@ -1552,7 +1554,7 @@ namespace KerbalConstructionTime
                 return null;
 
             StringBuilder sb = new StringBuilder();
-            sb.Append("This vessel contains parts which are not available at the moment:\n");
+            sb.Append(LocalCache.str_Messages_FailedReasons_PartNotAvailable); // "This vessel contains parts which are not available at the moment:\n"
 
             foreach (KeyValuePair<AvailablePart, int> kvp in lockedPartsOnShip)
             {
@@ -1859,9 +1861,9 @@ namespace KerbalConstructionTime
                     EditorLogic.fetch.switchEditorBtn.onClick.AddListener(() =>
                     {
                         PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "cannotSwitchEditor",
-                            "Cannot switch editor!",
-                            "Switching between VAB and SPH is not allowed while editing a vessel.",
-                            "Acknowledged", false, HighLogic.UISkin);
+                            LocalCache.str_Messages_NotSwitchEditor_title, // "Cannot switch editor!"
+                            LocalCache.str_Messages_NotSwitchEditorMsg, // "Switching between VAB and SPH is not allowed while editing a vessel."
+                            LocalCache.Btn_Acknowledged, false, HighLogic.UISkin); // "Acknowledged"
                     });
                 }
 

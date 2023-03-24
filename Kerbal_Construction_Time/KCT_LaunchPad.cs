@@ -55,7 +55,7 @@ namespace KerbalConstructionTime
                 var rr = ksc.Recon_Rollout.FirstOrDefault(r => r.launchPadID == name);
                 if (rr != null)
                 {
-                    failReason = rr.IsComplete() ? "a vessel is currently on the pad" : "pad has ongoing rollout or reconditioning";
+                    failReason = rr.IsComplete() ? LocalCache.str_Dismantlepad_FailedScreenMsg1 : LocalCache.str_Dismantlepad_FailedScreenMsg2; // "a vessel is currently on the pad""pad has ongoing rollout or reconditioning"
                     return false;
                 }
 
