@@ -1,5 +1,10 @@
 ChangeLog
 
+1.4.11.5 
+	Thanks to github user @plotut for this:
+	Localization support added
+	Chinese translation added
+
 1.4.11.4
 	Added check for game mode before displaying the "rush build" button.  Currently only allowd in Career & SCIENCE_SANDBOX 
 	Fixed a small memory leak
