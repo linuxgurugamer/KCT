@@ -490,6 +490,41 @@ namespace KerbalConstructionTime
             module.AddValue("animTime", "0");
             templates.AddNode(module);
 
+            //reset science experiments using DMModuleScienceAnimateGeneric
+            module = new ConfigNode("MODULE");
+            module.AddValue("name", "DMModuleScienceAnimateGeneric");
+            module.AddValue("Deployed", "False");
+            module.AddValue("IsDeplayed", "False");
+            module.AddValue("Inoperable", "False");
+            module.AddValue("experimentsReturned", "0");
+            module.AddValue("experimentsNumber", "0");
+            templates.AddNode(module);
+
+            //reset Universal Storage experiments
+            module = new ConfigNode("MODULE");
+            module.AddValue("name", "USSimpleScience");
+            module.AddValue("Deployed", "False");
+            module.AddValue("Inoperable", "False");
+            templates.AddNode(module);
+
+            module = new ConfigNode("MODULE");
+            module.AddValue("name", "USAdvancedScience");
+            module.AddValue("Deployed", "False");
+            module.AddValue("Inoperable", "False");
+            module.AddValue("experimentsReturned", "0");
+            module.AddValue("experimentsNumber", "0");
+            templates.AddNode(module);
+
+            //refurbish parts for EVA Repairs
+            module = new ConfigNode("MODULE");
+            module.AddValue("name", "ModuleEVARepairs");
+            module.AddValue("needsMaintenance", "False");
+            module.AddValue("currentMTBF", "864000");
+            module.AddValue("mtbfCurrentMultiplier", "1");
+            module.AddValue("partWornOut", "False");
+            module.AddValue("wheelStuckPosition", "-1");
+            templates.AddNode(module);
+
             templates.Save(KSPUtil.ApplicationRootPath + "GameData/KerbalConstructionTime/KCT_ModuleTemplates.cfg");
         }
 
