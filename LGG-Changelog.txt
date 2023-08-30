@@ -1,5 +1,9 @@
 ChangeLog
 
+1.4.12
+	Thanks to github user @Aelfhe1m for this:
+		Reset science experiments from DMModuleScienceAnimateGeneric and Universal Storage on recovery. Also refurbish all parts wear and tear for EVA Repairs
+
 1.4.11.5 
 	Thanks to github user @plotut for this:
 		Localization support added
