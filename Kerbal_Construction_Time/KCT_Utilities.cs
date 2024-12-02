@@ -691,6 +691,8 @@ namespace KerbalConstructionTime
             {
                 //ResearchAndDevelopment.Instance.Science += science;
                 ResearchAndDevelopment.Instance.AddScience(science, reason);
+                ScienceSubject subject = new ScienceSubject("KCT_Construction", "Kerbal Construction Research", 1.0f, 1.0f, 9999999f);
+                GameEvents.OnScienceRecieved.Fire(science, subject, null, false);
                 var message = new ScreenMessage(Localizer.Format("#KCT_Messages_AddScience", science), 4.0f, ScreenMessageStyle.UPPER_LEFT); // "[KCT] " + science + " science added."
                 ScreenMessages.PostScreenMessage(message);
                 return message.ToString();
