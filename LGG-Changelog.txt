@@ -1,5 +1,6 @@
 ChangeLog
-1.4.13 (unreleased)
+
+1.4.13 
 	Thanks to github user @AlexSkylark for this:
 		Added a call to GameEvent.Fire() in the event handler that adds science from BPs ("Research" on R&D tab) so other mods that manipulate science gain (i.e. Bureaucracy) can intercept it.
 	Renamed version file to remove old 1.80 info
