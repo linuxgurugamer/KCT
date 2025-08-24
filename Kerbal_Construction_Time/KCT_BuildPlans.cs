@@ -23,8 +23,8 @@ namespace KerbalConstructionTime
 
         static SortedList<string, KCT_BuildListVessel> plansList = null;
         static int planToDelete;
-        static Texture2D up;
-        static Texture2D hover;
+        static Texture2D kctButtonUp;
+        static Texture2D kctButtonHover;
 
         internal static void InitBuildPlans()
         {
@@ -54,10 +54,10 @@ namespace KerbalConstructionTime
 
             //ALPresent = AssemblyLoader.loadedAssemblies.Any(a => a.assembly.GetName().Name == "AviationLights");
 
-            up = new Texture2D(2, 2);
-            hover = new Texture2D(2, 2);
-            ToolbarControl.LoadImageFromFile(ref up, KSPUtil.ApplicationRootPath + "GameData/" + "KerbalConstructionTime/PluginData/Icons/KCT_add_normal");
-            ToolbarControl.LoadImageFromFile(ref hover, KSPUtil.ApplicationRootPath + "GameData/" + "KerbalConstructionTime/PluginData/Icons/KCT_add_hover");
+            kctButtonUp = new Texture2D(2, 2);
+            kctButtonHover = new Texture2D(2, 2);
+            ToolbarControl.LoadImageFromFile(ref kctButtonUp, KSPUtil.ApplicationRootPath + "GameData/" + "KerbalConstructionTime/PluginData/Icons/KCT_add_normal");
+            ToolbarControl.LoadImageFromFile(ref kctButtonHover, KSPUtil.ApplicationRootPath + "GameData/" + "KerbalConstructionTime/PluginData/Icons/KCT_add_hover");
             //up = GameDatabase.Instance.GetTexture("KerbalConstructionTime/PluginData/Icons/KCT_add_normal", false);
             //hover = GameDatabase.Instance.GetTexture("KerbalConstructionTime/PluginData/Icons/KCT_add_hover", false);
 
@@ -66,8 +66,8 @@ namespace KerbalConstructionTime
 
         static void PositionAndSizeIcon()
         {
-            Texture2D upTex = Texture2D.Instantiate(up);
-            Texture2D hoverTex = Texture2D.Instantiate(hover);
+            Texture2D upTex = Texture2D.Instantiate(kctButtonUp);
+            Texture2D hoverTex = Texture2D.Instantiate(kctButtonHover);
 
             int offset = 0;
             bool steamPresent = AssemblyLoader.loadedAssemblies.Any(a => a.assembly.GetName().Name == "KSPSteamCtrlr");
@@ -80,8 +80,8 @@ namespace KerbalConstructionTime
 
             rect = new Rect(Screen.width - (260 + offset) * scale, 0, 42 * scale, 38 * scale);
             {
-                TextureScale.Bilinear(upTex, (int)(up.width * scale), (int)(up.height * scale));
-                TextureScale.Bilinear(hoverTex, (int)(hover.width * scale), (int)(hover.height * scale));
+                TextureScale.Bilinear(upTex, (int)(kctButtonUp.width * scale), (int)(kctButtonUp.height * scale));
+                TextureScale.Bilinear(hoverTex, (int)(kctButtonHover.width * scale), (int)(kctButtonHover.height * scale));
             }
             upContent = new GUIContent("", upTex, "");
             hoverContent = new GUIContent("", hoverTex, "");

@@ -28,7 +28,7 @@
 
 
 # 1:GAMEDIR, VERSIONFILE [, GITHUBREPO ]
-1:KerbalConstructionTime, KerbalConstructionTime-180.version, KCT
+1:KerbalConstructionTime, KerbalConstructionTime.version, KCT
 
 # compiler Compiler options and flags
 #2c:-d:KSP1_4
