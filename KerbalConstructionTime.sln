@@ -8,12 +8,15 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{612C9FFF-5490-4D3D-AE97-E9622441AA8D}"
 	ProjectSection(SolutionItems) = preProject
 		buildRelease.bat = buildRelease.bat
-		deploy.bat = deploy.bat
 		Changelog-1.7.3.txt = Changelog-1.7.3.txt
 		Changelog.txt = Changelog.txt
+		deploy.bat = deploy.bat
 		jenkins.txt = jenkins.txt
 		KerbalConstructionTime.version = KerbalConstructionTime.version
 		README.md = README.md
+	EndProjectSection
+	ProjectSection(FolderGlobals) = preProject
+		D_5_4github_4KSP-1-Mods_4KCT_4KerbalConstructionTime_1version__JsonSchema = 
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KerbalConstructionTime-1.7.3", "Kerbal_Construction_Time\KerbalConstructionTime-1.7.3.csproj", "{18990461-34A4-4632-8644-EE550B0DF90E}"
